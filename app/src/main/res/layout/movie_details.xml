@@ -16,7 +16,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/img_blured"
+            android:id="@+id/iv_blured_img"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="1dp"
@@ -38,7 +38,7 @@
             tools:layout_constraintTop_creator="1" />
 
         <ImageView
-            android:id="@+id/img_tumbnail"
+            android:id="@+id/iv_tumbnail_img"
             android:layout_width="0dp"
             android:layout_height="276dp"
             android:layout_marginEnd="56dp"
@@ -78,7 +78,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_movieName"
+                android:id="@+id/tv_movie_name"
                 android:layout_width="0dp"
                 android:layout_height="53dp"
                 android:layout_weight="1"
@@ -89,21 +89,18 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/et_moviewSynopsis"
-            android:layout_width="match_parent"
+            android:id="@+id/et_moview_synopsis"
+            android:layout_width="0dp"
             android:layout_height="69dp"
-            android:layout_marginTop="0dp"
             android:background="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="@+id/img_blured"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_blured_img"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout"
             tools:layout_constraintBottom_creator="1"
             tools:layout_constraintLeft_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_editor_absoluteX="58dp"
-            tools:layout_editor_absoluteY="435dp" />
+            tools:layout_constraintTop_creator="1" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
