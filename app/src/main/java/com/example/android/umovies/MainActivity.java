@@ -3,6 +3,7 @@ package com.example.android.umovies;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ItemClickListener {
+    private static final int GRID_COLUMNS = 2;
     private RecyclerView moviesRView;
     private MoviesAdapter moviesAdapter;
     private List<String> movieTitles;
@@ -44,9 +46,8 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     }
 
     private void setupRecyclerView() {
-        // TODO Change LinearLayout to GridLayout
-        LinearLayoutManager llmanager = new LinearLayoutManager(this);
-        moviesRView.setLayoutManager(llmanager);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_COLUMNS);
+        moviesRView.setLayoutManager(layoutManager);
     }
 
     private void initView() {
