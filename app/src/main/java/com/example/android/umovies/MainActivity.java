@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.android.umovies.utilities.DataUtils;
 
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     private static final int GRID_COLUMNS = 2;
     private RecyclerView moviesRView;
     private MoviesAdapter moviesAdapter;
-    private List<String> movieTitles;
+    private List<Movie> moviesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,27 +28,11 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         setContentView(R.layout.activity_main);
         initView();
         setupRecyclerView();
-
-        // TODO 2. Check if fetchData() is not better somwhere else
-        // TODO 3. Set Adapter ONLY if needed
-        fetchData();
         setRecyclerViewAdapter();
+        fetchData();
     }
 
     private void fetchData() {
-        movieTitles = new ArrayList<>();
-        movieTitles.add("AAaaaaaaa");
-        movieTitles.add("Bbbb");
-        movieTitles.add("CCCCCCcccc");
-        movieTitles.add("DDdddd");
-        movieTitles.add("Eeeeeeeee");
-        movieTitles.add("Ffffff");
-        movieTitles.add("GGggggggg");
-        movieTitles.add("HHhHhhhh");
-        movieTitles.add("IIiiii");
-        movieTitles.add("JJjjjjjjjjjjj");
-
-
         new FetchMovieDataTask().execute(this);
     }
 
@@ -59,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
             try {
                 String response = DataUtils.getResponseFromHTTP(url);
-                List<Movie> moviesList = DataUtils.getMovieDataFromJson(context, response);
+                moviesList = DataUtils.getMovieDataFromJson(response);
 
                 return moviesList;
             }
@@ -71,13 +56,21 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
-            // TODO 1. Populate Adapter with the new Data
-            super.onPostExecute(movies);
+            populateMovieList(movies);
+        }
+    }
+
+    private void populateMovieList(List<Movie> movies) {
+        if(movies != null && movies.size() > 0) {
+            if(moviesAdapter != null) {
+                moviesAdapter.populateMovies(movies);
+            }
         }
     }
 
     private void setRecyclerViewAdapter() {
-        moviesAdapter = new MoviesAdapter(movieTitles, this);
+        moviesList = new ArrayList<>();
+        moviesAdapter = new MoviesAdapter(this, moviesList, this);
         moviesRView.setAdapter(moviesAdapter);
     }
 

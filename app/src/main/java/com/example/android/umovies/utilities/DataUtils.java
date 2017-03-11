@@ -62,7 +62,7 @@ public final class DataUtils {
         }
     }
 
-    public static List<Movie> getMovieDataFromJson(Context context, String jsonStr) throws JSONException {
+    public static List<Movie> getMovieDataFromJson(String jsonStr) throws JSONException {
         final String TITLE = "original_title";
         final String IMG_URL = "poster_path";
         final String SYNOPSIS = "overview";
@@ -70,19 +70,26 @@ public final class DataUtils {
         final String RATING = "vote_average";
         final String RES_LIST = "results";
 
-        List<Movie> movieList = null;
+        List<Movie> movieList = new ArrayList<>();
         JSONObject movieJson = new JSONObject(jsonStr);
         JSONArray moviesArray = movieJson.getJSONArray(RES_LIST);
 
         for(int i = 0; i < moviesArray.length(); i++) {
-            JSONObject movie = moviesArray.getJSONObject(i);
-            String title = movie.getString(TITLE);
-            String imgUrl = movie.getString(IMG_URL);
-            String synopsis = movie.getString(SYNOPSIS);
-            String releaseDate = movie.getString(RELEASE_DATE);
-            String rating = movie.getString(RATING);
+            JSONObject movieFromJson = moviesArray.getJSONObject(i);
+            String title = movieFromJson.getString(TITLE);
+            String imgUrl = movieFromJson.getString(IMG_URL);
+            String synopsis = movieFromJson.getString(SYNOPSIS);
+            String releaseDate = movieFromJson.getString(RELEASE_DATE);
+            String rating = movieFromJson.getString(RATING);
 
-            Log.v(MainActivity.TAG, title + "\n" + imgUrl + "\n" + synopsis + "\n" + releaseDate + "\n" + rating);
+            Movie movie = new Movie();
+            movie.title = title;
+            movie.imageURL = imgUrl;
+            movie.synopsis = synopsis;
+            movie.releaseDate = releaseDate;
+            movie.rating = rating;
+
+            movieList.add(movie);
         }
 
         return movieList;

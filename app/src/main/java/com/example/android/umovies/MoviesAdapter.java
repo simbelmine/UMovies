@@ -2,10 +2,14 @@ package com.example.android.umovies;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,11 +20,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
     private static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w185";
     private ItemClickListener itemClickListener;
-    private List<String> movieTitles;
+    private List<Movie> movies;
+    private Context context;
 
-    public MoviesAdapter(List<String> movieTitles, ItemClickListener itemClickListener) {
+    public MoviesAdapter(Context context, List<Movie> movieTitles, ItemClickListener itemClickListener) {
+        this.context = context;
         this.itemClickListener = itemClickListener;
-        this.movieTitles = movieTitles;
+        this.movies = movieTitles;
     }
 
     @Override
@@ -35,11 +41,24 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
 
     @Override
     public void onBindViewHolder(MoviesRVHolder holder, int position) {
-        holder.movieTitle.setText(movieTitles.get(position));
+        Movie currMovie = movies.get(position);
+        String title = currMovie.title;
+        String imageUrl = currMovie.imageURL;
+
+        holder.movieTitle.setText(title);
+
+        String imageUrlStr = BASE_IMAGE_URL+POSTER_SIZE+imageUrl;
+        Picasso.with(context).load(imageUrlStr).into(holder.movieImg);
     }
 
     @Override
     public int getItemCount() {
-        return movieTitles.size();
+        return movies.size();
+    }
+
+    public void populateMovies(List<Movie> movies) {
+        this.movies.clear();
+        this.movies = new ArrayList<>(movies);
+        notifyDataSetChanged();
     }
 }

@@ -5,9 +5,9 @@ package com.example.android.umovies;
  */
 
 public class Movie {
-    String title;
-    String imageURL;
-    String synopsis;
-    String releaseDate;
-    String rating;
+    public String title;
+    public String imageURL;
+    public String synopsis;
+    public String releaseDate;
+    public String rating;
 }
