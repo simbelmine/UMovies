@@ -13,6 +13,8 @@ import java.util.List;
  */
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
+    private static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
+    private static final String POSTER_SIZE = "w185";
     private ItemClickListener itemClickListener;
     private List<String> movieTitles;
 
