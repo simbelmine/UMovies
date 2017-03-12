@@ -8,4 +8,7 @@
     <dimen name="poster_height_regular">300dp</dimen>
     <dimen name="poster_height_large">600dp</dimen>
     <dimen name="poster_card_corner_radius">1dp</dimen>
+    <dimen name="txt_size16">16sp</dimen>
+    <dimen name="txt_size14">14sp</dimen>
+    <dimen name="text_line_padding">4dp</dimen>
 </resources>

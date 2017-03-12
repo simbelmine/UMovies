@@ -30,6 +30,8 @@
             android:padding = "@dimen/standard_padding"
             android:layout_alignParentBottom="true"
             android:fontFamily="serif"
+            android:textSize="@dimen/txt_size16"
+            android:background="@color/transparentGray900"
             android:ellipsize="end"
             android:maxLines="1"
             />

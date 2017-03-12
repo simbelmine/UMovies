@@ -6,8 +6,52 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/gray900">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_movies"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        />
+    <RelativeLayout
+        android:id="@+id/rl_no_movies_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/standard_padding"
+        android:visibility="invisible">
+        <ImageView
+            android:id="@+id/iv_no_movie_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingBottom="@dimen/standard_padding"
+            android:src="@mipmap/no_movies"
+            />
+        <TextView
+            android:id="@+id/tv_no_movies_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_below="@+id/iv_no_movie_img"
+            android:gravity="center"
+            android:paddingBottom="@dimen/text_line_padding"
+            android:text="@string/no_movies_message1"
+            android:textSize="@dimen/txt_size16"
+            android:textColor="@color/colorAccent"
+            android:fontFamily="serif"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_below="@+id/tv_no_movies_msg"
+            android:gravity="center"
+            android:text="@string/no_movies_message2"
+            android:textSize="@dimen/txt_size14"
+            android:textColor="@color/white"
+            android:fontFamily="serif"
+            />
+    </RelativeLayout>
+    </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

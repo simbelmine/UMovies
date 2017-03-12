@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.example.android.umovies.utilities.DataUtils;
 
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     private static final int GRID_COLUMNS_PORTRAIT = 2;
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RelativeLayout noMoviesMessage;
     private RecyclerView moviesRView;
     private MoviesAdapter moviesAdapter;
     private List<Movie> moviesList;
@@ -59,15 +62,19 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         @Override
         protected void onPostExecute(List<Movie> movies) {
             swipeRefreshLayout.setRefreshing(false);
-            populateMovieList(movies);
+            if(movies != null && movies.size() > 0) {
+                noMoviesMessage.setVisibility(View.INVISIBLE);
+                populateMovieList(movies);
+            }
+            else {
+                noMoviesMessage.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     private void populateMovieList(List<Movie> movies) {
-        if(movies != null && movies.size() > 0) {
-            if(moviesAdapter != null) {
-                moviesAdapter.populateMovies(movies);
-            }
+        if(moviesAdapter != null) {
+            moviesAdapter.populateMovies(movies);
         }
     }
 
@@ -88,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
     private void initView() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_movies_swipe_container);
+        noMoviesMessage = (RelativeLayout) findViewById(R.id.rl_no_movies_container);
         swipeRefreshLayout.setOnRefreshListener(this);
         moviesRView = (RecyclerView) findViewById(R.id.rv_movies);
     }
