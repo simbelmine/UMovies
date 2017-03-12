@@ -82,12 +82,18 @@ public final class DataUtils {
             String releaseDate = movieFromJson.getString(RELEASE_DATE);
             String rating = movieFromJson.getString(RATING);
 
-            Movie movie = new Movie();
-            movie.title = title;
-            movie.imageURL = imgUrl;
-            movie.synopsis = synopsis;
-            movie.releaseDate = releaseDate;
-            movie.rating = rating;
+//            Movie movie = new Movie();
+//            movie.title = title;
+//            movie.imageURL = imgUrl;
+//            movie.synopsis = synopsis;
+//            movie.releaseDate = releaseDate;
+//            movie.rating = rating;
+
+            Movie movie = new Movie.MovieBuilder(title, imgUrl)
+                    .releaseDate(releaseDate)
+                    .synopsis(synopsis)
+                    .rating(rating)
+                    .build();
 
             movieList.add(movie);
         }

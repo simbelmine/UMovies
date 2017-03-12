@@ -45,8 +45,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
     @Override
     public void onBindViewHolder(final MoviesRVHolder holder, int position) {
         Movie currMovie = movies.get(position);
-        String title = currMovie.title;
-        String imageUrl = currMovie.imageURL;
+        String title = currMovie.getTitle();
+        String imageUrl = currMovie.getImageURL();
 
         holder.movieTitle.setText(title);
 
