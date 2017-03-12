@@ -1,10 +1,13 @@
 package com.example.android.umovies;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -12,7 +15,7 @@ import android.widget.TextView;
  */
 
 public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    protected FrameLayout movieContainer;
+    protected LinearLayout movieContainer;
     protected ImageView movieImg;
     protected TextView movieTitle;
     protected ItemClickListener itemClickListener;
@@ -24,7 +27,7 @@ public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnCl
     }
 
     private void initItemView(View itemView) {
-        movieContainer = (FrameLayout) itemView.findViewById(R.id.fl_item_movie_container);
+        movieContainer = (LinearLayout) itemView.findViewById(R.id.fl_item_movie_container);
         movieContainer.setOnClickListener(this);
         movieImg = (ImageView) itemView.findViewById(R.id.iv_item_img);
         movieTitle = (TextView) itemView.findViewById(R.id.tv_item_title);

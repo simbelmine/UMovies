@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="standard_padding">16dp</dimen>
+    <dimen name="standard_margin">16dp</dimen>
+
+    <!-- MainActivity posters -->
+    <dimen name="poster_txt_lr_padding">6dp</dimen>
+    <dimen name="poster_height_regular">300dp</dimen>
+    <dimen name="poster_height_large">600dp</dimen>
+    <dimen name="poster_card_corner_radius">1dp</dimen>
+</resources>

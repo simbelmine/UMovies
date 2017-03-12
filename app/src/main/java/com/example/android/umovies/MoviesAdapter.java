@@ -1,6 +1,8 @@
 package com.example.android.umovies;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +43,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MoviesRVHolder holder, int position) {
+    public void onBindViewHolder(final MoviesRVHolder holder, int position) {
         Movie currMovie = movies.get(position);
         String title = currMovie.title;
         String imageUrl = currMovie.imageURL;
@@ -48,7 +51,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
         holder.movieTitle.setText(title);
 
         String imageUrlStr = BASE_IMAGE_URL+POSTER_SIZE+imageUrl;
-        Picasso.with(context).load(imageUrlStr).into(holder.movieImg);
+        Picasso.with(context)
+                .load(imageUrlStr)
+                .fit()
+                .into(holder.movieImg);
     }
 
     @Override

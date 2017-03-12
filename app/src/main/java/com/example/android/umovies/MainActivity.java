@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.example.android.umovies.utilities.DataUtils;
 
@@ -17,7 +16,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ItemClickListener {
     public static final String TAG = "uMovies";
-    private static final int GRID_COLUMNS = 2;
+    private static final int GRID_COLUMNS_PORTRAIT = 2;
+    private static final int GRID_COLUMNS_LANDSCAPE = 3;
     private RecyclerView moviesRView;
     private MoviesAdapter moviesAdapter;
     private List<Movie> moviesList;
@@ -75,7 +75,11 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     }
 
     private void setupRecyclerView() {
-        GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_COLUMNS);
+        GridLayoutManager layoutManager;
+        if(getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE)
+            layoutManager = new GridLayoutManager(this, GRID_COLUMNS_LANDSCAPE);
+        else
+            layoutManager = new GridLayoutManager(this, GRID_COLUMNS_PORTRAIT);
         moviesRView.setLayoutManager(layoutManager);
     }
 
