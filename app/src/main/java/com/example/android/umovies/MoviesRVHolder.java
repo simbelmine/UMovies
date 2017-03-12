@@ -1,13 +1,10 @@
 package com.example.android.umovies;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -19,6 +16,7 @@ public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnCl
     protected ImageView movieImg;
     protected TextView movieTitle;
     protected ItemClickListener itemClickListener;
+    protected ProgressBar progressBar;
 
     public MoviesRVHolder(View itemView, ItemClickListener itemClickListener) {
         super(itemView);
@@ -31,6 +29,7 @@ public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnCl
         movieContainer.setOnClickListener(this);
         movieImg = (ImageView) itemView.findViewById(R.id.iv_item_img);
         movieTitle = (TextView) itemView.findViewById(R.id.tv_item_title);
+        progressBar = (ProgressBar) itemView.findViewById(R.id.pb_image_progress);
     }
 
     @Override
