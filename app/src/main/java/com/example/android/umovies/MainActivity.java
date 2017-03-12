@@ -3,6 +3,7 @@ package com.example.android.umovies;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,10 +15,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ItemClickListener {
+public class MainActivity extends AppCompatActivity implements ItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = "uMovies";
     private static final int GRID_COLUMNS_PORTRAIT = 2;
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView moviesRView;
     private MoviesAdapter moviesAdapter;
     private List<Movie> moviesList;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
+            swipeRefreshLayout.setRefreshing(false);
             populateMovieList(movies);
         }
     }
@@ -84,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     }
 
     private void initView() {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_movies_swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(this);
         moviesRView = (RecyclerView) findViewById(R.id.rv_movies);
     }
 
@@ -91,5 +96,10 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     public void onItemClick() {
         Intent intent = new Intent(this, DetailsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchData();
     }
 }
