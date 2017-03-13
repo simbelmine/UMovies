@@ -7,6 +7,13 @@
     <color name="white">#ffffff</color>
     <color name="gray700">#616161</color>
     <color name="gray800">#424242</color>
+    <color name="gray850">#282828</color>
     <color name="gray900">#212121</color>
+
+    <color name="main">#081C24</color>
+    <color name="secondary">#00D474</color>
+
+
     <color name="transparentGray900">#80212121</color>
+    <color name="transparent">#33000000</color>
 </resources>

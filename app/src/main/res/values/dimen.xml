@@ -11,4 +11,5 @@
     <dimen name="txt_size16">16sp</dimen>
     <dimen name="txt_size14">14sp</dimen>
     <dimen name="text_line_padding">4dp</dimen>
+    <dimen name="padding_from_top_toolbar">24dp</dimen>
 </resources>

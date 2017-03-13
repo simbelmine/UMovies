@@ -2,12 +2,15 @@ package com.example.android.umovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initToolbarBar();
         initView();
         setupRecyclerView();
         setRecyclerViewAdapter();
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     }
 
     private void setupRecyclerView() {
-        GridLayoutManager layoutManager;
+        final GridLayoutManager layoutManager;
         if(getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE)
             layoutManager = new GridLayoutManager(this, GRID_COLUMNS_LANDSCAPE);
         else
@@ -95,8 +99,8 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
     private void initView() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_movies_swipe_container);
-        noMoviesMessage = (RelativeLayout) findViewById(R.id.rl_no_movies_container);
         swipeRefreshLayout.setOnRefreshListener(this);
+        noMoviesMessage = (RelativeLayout) findViewById(R.id.rl_no_movies_container);
         moviesRView = (RecyclerView) findViewById(R.id.rv_movies);
     }
 
@@ -109,5 +113,16 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     @Override
     public void onRefresh() {
         fetchData();
+    }
+
+    Toolbar toolbar;
+    private void initToolbarBar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setNavigationIcon(R.mipmap.app_icon);
+        if(Build.VERSION.SDK_INT >= 21) {
+            toolbar.setPadding(0, ((int)getResources().getDimension(R.dimen.padding_from_top_toolbar)), 0, 0);
+        }
+        setSupportActionBar(toolbar);
     }
 }
