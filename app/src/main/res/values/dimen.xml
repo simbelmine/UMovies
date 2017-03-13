@@ -12,4 +12,6 @@
     <dimen name="txt_size14">14sp</dimen>
     <dimen name="text_line_padding">4dp</dimen>
     <dimen name="padding_from_top_toolbar">24dp</dimen>
+    <dimen name="margin_image_lr">42dp</dimen>
+    <dimen name="margin_image_tb">24dp</dimen>
 </resources>

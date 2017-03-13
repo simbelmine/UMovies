@@ -1,147 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    >
-
-    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/cl_container"
+    android:fillViewport="true">
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/iv_blured_img"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@mipmap/ic_launcher"
-            tools:layout_constraintBottom_creator="1"
-            tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintRight_creator="1"
-            tools:layout_constraintTop_creator="1" />
-
-        <ImageView
-            android:id="@+id/iv_tumbnail_img"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="56dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_launcher"
-            tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintRight_creator="1"
-            tools:layout_constraintTop_creator="1"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-            tools:layout_constraintBottom_creator="1" />
-
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparentGray900_40"/>
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="0dp"
-            android:layout_height="92dp"
-            android:layout_marginBottom="74dp"
-            android:background="@color/transparentGray900"
+            android:id="@+id/ll_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.6"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:layout_constraintBottom_creator="1"
-            tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintRight_creator="1">
-
-            <LinearLayout
-                android:id="@+id/ll_stars"
+            android:weightSum="5">
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="39dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
+                android:layout_height="0dp"
+                android:layout_weight="3.5">
                 <ImageView
-                    android:id="@+id/iv_star"
+                    android:id="@+id/iv_tumbnail_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_image_lr"
+                    android:layout_marginRight="@dimen/margin_image_lr"
+                    android:layout_marginTop="@dimen/margin_image_tb"
+                    android:layout_marginBottom="@dimen/margin_image_tb"/>
+                <ProgressBar
+                    android:id="@+id/pb_movie_img_progress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@android:drawable/btn_star_big_on" />
-
-                <TextView
-                    android:id="@+id/tv_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="TextView" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_movie_name"
-                android:layout_width="0dp"
-                android:layout_height="53dp"
-                android:layout_weight="1"
-                android:text="TextView"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="465dp" />
-
-            <TextView
-                android:id="@+id/tv_movie_release_date"
+                    android:indeterminate="true"
+                    android:layout_gravity="center"
+                    />
+            </FrameLayout>
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="173dp" />
-
+                android:layout_height="0dp"
+                android:layout_weight="2.5"
+                android:layout_marginLeft="@dimen/standard_margin"
+                android:layout_marginRight="@dimen/standard_margin">
+                <LinearLayout
+                    android:id="@+id/rating_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/star_on"/>
+                    <TextView
+                        android:id="@+id/tv_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/white"/>
+                    <TextView
+                        android:id="@+id/tv_movie_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:paddingLeft="@dimen/standard_padding"
+                        />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_movie_release_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rating_container"
+                    android:textColor="@color/white"/>
+                <TextView
+                    android:id="@+id/tv_movie_synopsis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_movie_release_date"
+                    android:textColor="@color/white"/>
+            </RelativeLayout>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_movie_synopsis"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:text="TextView"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            android:layout_marginStart="1dp"
-            android:layout_marginEnd="1dp"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:layout_constraintLeft_creator="1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp" />
-
-        <ProgressBar
-            android:id="@+id/pb_movie_img_progress"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="112dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_tumbnail_img"
-            tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintRight_creator="1"
-            tools:layout_constraintTop_creator="1" />
-
-    </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 </ScrollView>

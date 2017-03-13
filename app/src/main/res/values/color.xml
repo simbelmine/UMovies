@@ -14,6 +14,7 @@
     <color name="secondary">#00D474</color>
 
 
-    <color name="transparentGray900">#80212121</color>
+    <color name="transparentGray900_50">#80212121</color>
+    <color name="transparentGray900_40">#B3000000</color>
     <color name="transparent">#33000000</color>
 </resources>

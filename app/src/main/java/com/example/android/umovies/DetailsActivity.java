@@ -1,20 +1,17 @@
 package com.example.android.umovies;
 
-import android.app.Activity;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.umovies.Transformations.BlurTransformation;
 import com.example.android.umovies.utilities.ImageUtils;
-import com.example.android.umovies.utilities.WindowUtils;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -22,7 +19,7 @@ import com.squareup.picasso.Picasso;
  */
 
 public class DetailsActivity extends AppCompatActivity {
-    private ConstraintLayout movieContainer;
+    private LinearLayout movieContainer;
     private ImageView bluredImage;
     private ImageView movieImage;
     private TextView ratingView;
@@ -45,8 +42,16 @@ public class DetailsActivity extends AppCompatActivity {
         if(movie != null) {
             progressBar.setVisibility(View.VISIBLE);
             String imgUrl = movie.getImageURL();
+            String fullUrl = ImageUtils.getImageUrl(imgUrl);
+
             Picasso.with(this)
-                    .load(ImageUtils.getImageUrl(imgUrl))
+                    .load(fullUrl)
+                    .transform(new BlurTransformation(this))
+                    .fit()
+                    .into(bluredImage);
+
+            Picasso.with(this)
+                    .load(fullUrl)
                     .fit()
                     .into(movieImage, ImageUtils.getImageCallback(progressBar));
             ratingView.setText(movie.getRating());
@@ -64,7 +69,6 @@ public class DetailsActivity extends AppCompatActivity {
         if(bundle != null) {
             Movie movie = (Movie)bundle.get(MainActivity.MOVIE_OBJ);
             if(movie != null) {
-                Log.v(MainActivity.TAG, "Name = " + movie.getTitle());
                 return movie;
             }
             else {
@@ -75,7 +79,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        movieContainer = (ConstraintLayout) findViewById(R.id.cl_container);
+        movieContainer = (LinearLayout) findViewById(R.id.ll_container);
         bluredImage = (ImageView) findViewById(R.id.iv_blured_img);
         movieImage = (ImageView) findViewById(R.id.iv_tumbnail_img);
         ratingView = (TextView) findViewById(R.id.tv_rating);
