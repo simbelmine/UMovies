@@ -1,17 +1,14 @@
 package com.example.android.umovies;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.umovies.utilities.ImageUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +18,6 @@ import java.util.List;
  */
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
-    private static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
-    private static final String POSTER_SIZE = "w185";
     private ItemClickListener itemClickListener;
     private List<Movie> movies;
     private Context context;
@@ -52,11 +47,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
         holder.movieTitle.setText(title);
         holder.progressBar.setVisibility(View.VISIBLE);
 
-        String imageUrlStr = BASE_IMAGE_URL+POSTER_SIZE+imageUrl;
+        String imageUrlStr = ImageUtils.getImageUrl(imageUrl);
         Picasso.with(context)
                 .load(imageUrlStr)
                 .fit()
-                .into(holder.movieImg, getImageCallback(holder));
+                .into(holder.movieImg, ImageUtils.getImageCallback(holder.progressBar));
     }
 
     @Override
@@ -68,18 +63,5 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
         this.movies.clear();
         this.movies = new ArrayList<>(movies);
         notifyDataSetChanged();
-    }
-
-    private Callback getImageCallback(final MoviesRVHolder holder) {
-        return new Callback() {
-            @Override
-            public void onSuccess() {
-                holder.progressBar.setVisibility(View.GONE);
-            }
-            @Override
-            public void onError() {
-
-            }
-        };
     }
 }

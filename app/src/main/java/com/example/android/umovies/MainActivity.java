@@ -2,19 +2,17 @@ package com.example.android.umovies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.example.android.umovies.utilities.DataUtils;
+import com.example.android.umovies.utilities.WindowUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     public static final String TAG = "uMovies";
     private static final int GRID_COLUMNS_PORTRAIT = 2;
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
+    public static final String MOVIE_OBJ = "MovieObj";
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout noMoviesMessage;
     private RecyclerView moviesRView;
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initToolbarBar();
+        WindowUtils.initToolbarBar(this);
         initView();
         setupRecyclerView();
         setRecyclerViewAdapter();
@@ -105,24 +104,19 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     }
 
     @Override
-    public void onItemClick() {
+    public void onItemClick(int position) {
+        Movie currMovie = null;
+        if(moviesList != null) {
+            currMovie = moviesList.get(position);
+        }
+
         Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra(MOVIE_OBJ, currMovie);
         startActivity(intent);
     }
 
     @Override
     public void onRefresh() {
         fetchData();
-    }
-
-    Toolbar toolbar;
-    private void initToolbarBar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setNavigationIcon(R.mipmap.app_icon);
-        if(Build.VERSION.SDK_INT >= 21) {
-            toolbar.setPadding(0, ((int)getResources().getDimension(R.dimen.padding_from_top_toolbar)), 0, 0);
-        }
-        setSupportActionBar(toolbar);
     }
 }

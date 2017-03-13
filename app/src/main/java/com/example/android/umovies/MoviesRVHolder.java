@@ -34,6 +34,6 @@ public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        itemClickListener.onItemClick();
+        itemClickListener.onItemClick(getAdapterPosition());
     }
 }

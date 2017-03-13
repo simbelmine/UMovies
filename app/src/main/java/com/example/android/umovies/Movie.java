@@ -1,10 +1,12 @@
 package com.example.android.umovies;
 
+import java.io.Serializable;
+
 /**
  * Created by Sve on 3/10/17.
  */
 
-public class Movie {
+public class Movie implements Serializable {
     private final String title;         // required
     private final String imageURL;      // required
     private final String synopsis;      // optional

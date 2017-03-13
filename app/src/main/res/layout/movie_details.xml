@@ -40,19 +40,23 @@
         <ImageView
             android:id="@+id/iv_tumbnail_img"
             android:layout_width="0dp"
-            android:layout_height="276dp"
+            android:layout_height="0dp"
             android:layout_marginEnd="56dp"
-            android:layout_marginLeft="56dp"
-            android:layout_marginRight="56dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
             android:layout_marginStart="56dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@mipmap/ic_launcher"
             tools:layout_constraintLeft_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintTop_creator="1" />
+            tools:layout_constraintTop_creator="1"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            tools:layout_constraintBottom_creator="1" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -73,8 +77,22 @@
                 android:id="@+id/ll_stars"
                 android:layout_width="match_parent"
                 android:layout_height="39dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:id="@+id/iv_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@android:drawable/btn_star_big_on" />
+
+                <TextView
+                    android:id="@+id/tv_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView" />
             </LinearLayout>
 
             <TextView
@@ -111,6 +129,19 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp" />
+
+        <ProgressBar
+            android:id="@+id/pb_movie_img_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="112dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_tumbnail_img"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
