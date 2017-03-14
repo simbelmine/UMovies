@@ -3,12 +3,15 @@ package com.example.android.umovies;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.example.android.umovies.utilities.DataUtils;
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     private static final int GRID_COLUMNS_PORTRAIT = 2;
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
     public static final String MOVIE_OBJ = "MovieObj";
+    private FrameLayout mainContainer;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout noMoviesMessage;
     private RecyclerView moviesRView;
@@ -101,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         swipeRefreshLayout.setOnRefreshListener(this);
         noMoviesMessage = (RelativeLayout) findViewById(R.id.rl_no_movies_container);
         moviesRView = (RecyclerView) findViewById(R.id.rv_movies);
+        mainContainer = (FrameLayout) findViewById(R.id.cl_main_container);
+
+        if(Build.VERSION.SDK_INT >= 21) {
+            mainContainer.setPadding(0, (int)getResources().getDimension(R.dimen.padding_from_top_toolbar), 0, 0);
+        }
     }
 
     @Override
