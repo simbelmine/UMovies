@@ -22,8 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rating_lbl"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:text="9.5/10"/>
+            android:textSize="18sp"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -43,7 +42,26 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/release_date_lbl"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:text="2/24/2017"/>
+            android:textSize="18sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/standard_margin">
+        <TextView
+            android:id="@+id/runtime_lbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="Runtime"
+            />
+        <TextView
+            android:id="@+id/tv_movie_runtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/runtime_lbl"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
     </RelativeLayout>
 </LinearLayout>

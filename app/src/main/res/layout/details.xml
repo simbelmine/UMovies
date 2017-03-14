@@ -34,9 +34,19 @@
                 android:textSize="30sp"
                 android:layout_marginTop="42dp"
                 />
-            <include layout="@layout/stars"/>
-            <include layout="@layout/additional_info"/>
-            <include layout="@layout/ganres"/>
+            <include layout="@layout/details_stars"/>
+            <include layout="@layout/details_additional_info"/>
+            <include layout="@layout/details_revenue"/>
+            <include layout="@layout/details_genres"/>
+
+            <TextView
+                android:id="@+id/tv_movie_tagline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="32dp"
+                />
 
             <TextView
                 android:layout_width="match_parent"

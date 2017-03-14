@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -52,11 +51,11 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         @Override
         protected List<Movie> doInBackground(Context... params) {
             Context context = params[0];
-            URL url = DataUtils.getDBUrl(context);
+            URL url = DataUtils.getDBUrl(context, null);
 
             try {
                 String response = DataUtils.getResponseFromHTTP(url);
-                moviesList = DataUtils.getMovieDataFromJson(response);
+                moviesList = DataUtils.getMovieListDataFromJson(response);
 
                 return moviesList;
             }

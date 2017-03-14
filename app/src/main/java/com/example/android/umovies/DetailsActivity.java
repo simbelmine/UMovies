@@ -1,19 +1,23 @@
 package com.example.android.umovies;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.umovies.Transformations.BlurTransformation;
+import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.ImageUtils;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
+
+import java.net.URL;
 
 /**
  * Created by Sve on 3/10/17.
@@ -29,6 +33,9 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView releaseDateView;
     private TextView synopsisView;
     private TextView votesView;
+    private TextView runtimeView;
+    private TextView revenueView;
+    private TextView taglineView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +45,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         Movie movie = getFromExtras();
         populateData(movie);
+        String movieId = movie.getId();
+        new FetchAdditionalMovieData(this, movieId, movie).execute();
     }
 
     private void populateData(Movie movie) {
@@ -90,10 +99,53 @@ public class DetailsActivity extends AppCompatActivity {
         votesView = (TextView) findViewById(R.id.tv_votes);
         ratingView = (TextView) findViewById(R.id.tv_rating);
         releaseDateView = (TextView) findViewById(R.id.tv_movie_release_date);
+        runtimeView = (TextView) findViewById(R.id.tv_movie_runtime);
+        revenueView = (TextView) findViewById(R.id.tv_movie_revenue);
+        taglineView = (TextView) findViewById(R.id.tv_movie_tagline);
         synopsisView = (TextView) findViewById(R.id.tv_movie_synopsis);
 
         if(Build.VERSION.SDK_INT >= 21) {
             movieContainer.setPadding(0, (int)getResources().getDimension(R.dimen.padding_from_top_toolbar), 0, 0);
+        }
+    }
+
+    private class FetchAdditionalMovieData extends AsyncTask<Void, Void, Movie> {
+        private Context context;
+        private String movieId;
+        private Movie movie;
+
+        FetchAdditionalMovieData(Context context, String movieId, Movie movie) {
+            this.context = context;
+            this.movieId = movieId;
+            this.movie = movie;
+        }
+
+        @Override
+        protected Movie doInBackground(Void... params) {
+            if(movieId != null && movie != null) {
+                URL url = DataUtils.getDBUrl(context, movieId);
+
+                try {
+                    String response = DataUtils.getResponseFromHTTP(url);
+                    Movie movieWithAdditionalData = DataUtils.getMovieAdditionalData(movie, response);
+
+                    return movieWithAdditionalData;
+                }
+                catch (Exception ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Movie movie) {
+            if(movie != null) {
+                runtimeView.setText(movie.getRuntime());
+                revenueView.setText("$" + movie.getRevenue());
+                taglineView.setText(movie.getTagline());
+            }
         }
     }
 }
