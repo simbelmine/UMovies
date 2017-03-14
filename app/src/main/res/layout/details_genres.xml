@@ -5,26 +5,10 @@
     android:orientation="horizontal"
     android:layout_marginTop="@dimen/standard_margin">
     <TextView
+        android:id="@+id/tv_movie_genres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/secondary"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Action"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/secondary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="@dimen/standard_margin"
-        android:text="Drama"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/secondary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="@dimen/standard_margin"
-        android:text="Thriller"/>
+        android:textStyle="bold"/>
 </LinearLayout>

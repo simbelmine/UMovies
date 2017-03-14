@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,9 +15,8 @@ import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.ImageUtils;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by Sve on 3/10/17.
@@ -37,6 +35,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView runtimeView;
     private TextView revenueView;
     private TextView taglineView;
+    private TextView genresView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,6 +101,7 @@ public class DetailsActivity extends AppCompatActivity {
         releaseDateView = (TextView) findViewById(R.id.tv_movie_release_date);
         runtimeView = (TextView) findViewById(R.id.tv_movie_runtime);
         revenueView = (TextView) findViewById(R.id.tv_movie_revenue);
+        genresView = (TextView) findViewById(R.id.tv_movie_genres);
         taglineView = (TextView) findViewById(R.id.tv_movie_tagline);
         synopsisView = (TextView) findViewById(R.id.tv_movie_synopsis);
 
@@ -146,6 +146,7 @@ public class DetailsActivity extends AppCompatActivity {
                 runtimeView.setText(getRuntime(movie.getRuntime()));
                 revenueView.setText(getRevenue(movie.getRevenue()));
                 taglineView.setText(movie.getTagline());
+                genresView.setText(getGenres(movie.getGenres()));
             }
         }
     }
@@ -193,5 +194,15 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
         return "$" + result + postfix;
+    }
+
+    private String getGenres(List<String> genres) {
+        StringBuilder genresStr = new StringBuilder();
+
+        for(String g : genres) {
+            genresStr.append(g + "    ");
+        }
+
+        return genresStr.toString();
     }
 }
