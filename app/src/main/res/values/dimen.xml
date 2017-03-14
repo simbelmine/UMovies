@@ -14,4 +14,7 @@
     <dimen name="padding_from_top_toolbar">24dp</dimen>
     <dimen name="margin_image_lr">42dp</dimen>
     <dimen name="margin_image_tb">24dp</dimen>
+
+    <dimen name="star_size">25dp</dimen>
+    <dimen name="star_padding">5dp</dimen>
 </resources>

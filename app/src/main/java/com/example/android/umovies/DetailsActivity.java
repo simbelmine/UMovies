@@ -6,8 +6,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.umovies.Transformations.BlurTransformation;
@@ -24,6 +26,7 @@ import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final int BLUR_RADIUS = 25;
+    private static final int TOTAL_COUNT_RATING_STARS = 5;
     private FrameLayout movieContainer;
     private ImageView blurImage;
     private ImageView movieImage;
@@ -61,7 +64,8 @@ public class DetailsActivity extends AppCompatActivity {
                     .into(movieImage);
             titleView.setText(movie.getTitle());
             votesView.setText("(" + movie.getVotes() + " votes)");
-            ratingView.setText(movie.getRating()+"/10");
+            setRatingStars(movie.getRating());
+            ratingView.setText(getRating(movie.getRating()));
             releaseDateView.setText(movie.getReleaseDate());
             synopsisView.setText(movie.getSynopsis());
         }
@@ -169,7 +173,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         if(revenueAmount/billion > 0) {
             result = revenueAmount/(double)billion;
-            postfix = "M";
+            postfix = "B";
         }
         else if(revenueAmount/million > 0) {
             result = revenueAmount/(double)million;
@@ -186,10 +190,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         result = (double)Math.round(result * 10d) / 10d;
 
-        double afterFloatingPointVal = result%Math.floor(result);
-        afterFloatingPointVal = (afterFloatingPointVal%1.0)*10;
-
-        if((int)afterFloatingPointVal == 0) {
+        if(isZeroAfterFloatingPoint(result)){
             return "$" + (int)result + postfix;
         }
 
@@ -205,4 +206,71 @@ public class DetailsActivity extends AppCompatActivity {
 
         return genresStr.toString();
     }
+
+    private String getRating(String rating) {
+        double ratingVal = Double.valueOf(rating);
+        double result = (double)Math.round((ratingVal/2) * 10d) / 10d;
+        String ratingStr;
+
+        if(isZeroAfterFloatingPoint(result)) {
+            ratingStr = String.valueOf((int) result);
+        }
+        else {
+            ratingStr = String.valueOf(result);
+        }
+
+        return ratingStr + "/" + TOTAL_COUNT_RATING_STARS;
+    }
+
+    private void setRatingStars(String rating) {
+        double ratingNumValue = Double.valueOf(rating);
+
+        inflateRatingStars(ratingNumValue);
+    }
+
+    private void inflateRatingStars(double ratingStarsCount) {
+        int total = TOTAL_COUNT_RATING_STARS;
+        LinearLayout ratingStarsContainer = (LinearLayout) findViewById(R.id.ll_stars_container);
+        int fullStarsCount = ((int)ratingStarsCount)/2;
+
+        for(int i = 0; i < fullStarsCount; i++) {
+            addImageViewToLayout(ratingStarsContainer, R.mipmap.full_star);
+            total--;
+        }
+
+        double halfStarsCount = ratingStarsCount - (double)fullStarsCount/2;
+        if(halfStarsCount > 0){
+            addImageViewToLayout(ratingStarsContainer, R.mipmap.half_star);
+            total--;
+        }
+
+        for(int i = 0; i < total; i++) {
+            addImageViewToLayout(ratingStarsContainer, R.mipmap.empty_star);
+        }
+
+        ratingStarsContainer.invalidate();
+    }
+
+    private void addImageViewToLayout(LinearLayout container, int resId) {
+        float starSize = getResources().getDimension(R.dimen.star_size);
+        float paddingRight = getResources().getDimension(R.dimen.star_padding);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int)starSize, (int)starSize);
+
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(resId);
+        imageView.setPadding(0, 0, (int)paddingRight, 0);
+        imageView.setLayoutParams(layoutParams);
+        container.addView(imageView);
+    }
+
+    private boolean isZeroAfterFloatingPoint(double val) {
+        double res = val - Math.floor(val);
+        res = (res%1.0)*10;
+
+        if(res == 0)
+            return true;
+
+        return false;
+    }
+
 }
