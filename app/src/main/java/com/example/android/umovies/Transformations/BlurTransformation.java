@@ -1,32 +1,35 @@
 package com.example.android.umovies.Transformations;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BlurMaskFilter;
+import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.util.Log;
 
+import com.example.android.umovies.MainActivity;
 import com.squareup.picasso.Transformation;
 
-/**
- * Created by Sve on 3/12/17.
- */
 
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class BlurTransformation implements Transformation {
-    Context context;
-    private RenderScript renderScript;
-    private ScriptIntrinsicBlur scriptIntrinsicBlur;
+    private RenderScript rs;
+    private int radius;
+    private long startTime;
 
-    RenderScript rs;
-    public BlurTransformation(Context context) {
+    public BlurTransformation(Context context, int radius) {
         super();
         rs = RenderScript.create(context);
+        this.radius = radius;
     }
 
     @Override
     public Bitmap transform(Bitmap source) {
+        startTime = System.currentTimeMillis();
+
         // Create another bitmap that will hold the results of the filter.
         Bitmap blurredBitmap = Bitmap.createBitmap(source);
 
@@ -39,7 +42,7 @@ public class BlurTransformation implements Transformation {
         script.setInput(input);
 
         // Set the blur radius
-        script.setRadius(25);
+        script.setRadius(radius);
 
         // Start the ScriptIntrinisicBlur
         script.forEach(output);
@@ -49,6 +52,7 @@ public class BlurTransformation implements Transformation {
 
         source.recycle();
 
+        Log.v(MainActivity.TAG, "Log - Blur Running Time: " + (System.currentTimeMillis() - startTime) + "ms");
         return blurredBitmap;
     }
 
