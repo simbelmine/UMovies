@@ -144,6 +144,4 @@ public final class DataUtils {
             genresList.add(genreName);
         }
     }
-
-
 }

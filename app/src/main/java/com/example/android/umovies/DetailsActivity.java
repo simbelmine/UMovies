@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -142,10 +143,55 @@ public class DetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Movie movie) {
             if(movie != null) {
-                runtimeView.setText(movie.getRuntime());
-                revenueView.setText("$" + movie.getRevenue());
+                runtimeView.setText(getRuntime(movie.getRuntime()));
+                revenueView.setText(getRevenue(movie.getRevenue()));
                 taglineView.setText(movie.getTagline());
             }
         }
+    }
+
+    private String getRuntime(String original) {
+        int runtimeNum = Integer.valueOf(original);
+        int hours = Math.round(runtimeNum/60);
+        int minutes = runtimeNum - (hours*60);
+
+        return hours + " hr. " + minutes + " min.";
+    }
+
+    private String getRevenue(String original) {
+        int billion = 1000000000;
+        int million = 1000000;
+        int thousand = 1000;
+        int revenueAmount = Integer.valueOf(original);
+        double result;
+        String postfix;
+
+        if(revenueAmount/billion > 0) {
+            result = revenueAmount/(double)billion;
+            postfix = "M";
+        }
+        else if(revenueAmount/million > 0) {
+            result = revenueAmount/(double)million;
+            postfix = "M";
+        }
+        else if(revenueAmount/thousand > 0) {
+            result = revenueAmount/(double)thousand;
+            postfix = "k";
+        }
+        else {
+            result = revenueAmount;
+            postfix = "";
+        }
+
+        result = (double)Math.round(result * 10d) / 10d;
+
+        double afterFloatingPointVal = result%Math.floor(result);
+        afterFloatingPointVal = (afterFloatingPointVal%1.0)*10;
+
+        if((int)afterFloatingPointVal == 0) {
+            return "$" + (int)result + postfix;
+        }
+
+        return "$" + result + postfix;
     }
 }
