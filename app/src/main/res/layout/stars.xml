@@ -40,6 +40,7 @@
         android:id="@+id/tv_votes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="(60 votes)"/>
+        android:layout_marginLeft="@dimen/standard_margin"
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
 </LinearLayout>

@@ -69,6 +69,7 @@ public final class DataUtils {
         final String RELEASE_DATE = "release_date";
         final String RATING = "vote_average";
         final String RES_LIST = "results";
+        final String VOTE_COUNT = "vote_count";
 
         List<Movie> movieList = new ArrayList<>();
         JSONObject movieJson = new JSONObject(jsonStr);
@@ -81,18 +82,13 @@ public final class DataUtils {
             String synopsis = movieFromJson.getString(SYNOPSIS);
             String releaseDate = movieFromJson.getString(RELEASE_DATE);
             String rating = movieFromJson.getString(RATING);
-
-//            Movie movie = new Movie();
-//            movie.title = title;
-//            movie.imageURL = imgUrl;
-//            movie.synopsis = synopsis;
-//            movie.releaseDate = releaseDate;
-//            movie.rating = rating;
+            String voteCount = movieFromJson.getString(VOTE_COUNT);
 
             Movie movie = new Movie.MovieBuilder(title, imgUrl)
                     .releaseDate(releaseDate)
                     .synopsis(synopsis)
                     .rating(rating)
+                    .votes(voteCount)
                     .build();
 
             movieList.add(movie);

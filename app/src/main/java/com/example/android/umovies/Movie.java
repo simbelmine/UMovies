@@ -12,6 +12,7 @@ public class Movie implements Serializable {
     private final String synopsis;      // optional
     private final String releaseDate;   // optional
     private final String rating;         // optional
+    private final String votes;
 
 
     private Movie(MovieBuilder builder) {
@@ -20,6 +21,7 @@ public class Movie implements Serializable {
         this.synopsis = builder.synopsis;
         this.releaseDate = builder.releaseDate;
         this.rating = builder.rating;
+        this.votes = builder.votes;
     }
 
     public String getTitle() {
@@ -42,12 +44,17 @@ public class Movie implements Serializable {
         return rating;
     }
 
+    public String getVotes(){
+        return votes;
+    }
+
     public static class MovieBuilder {
         private final String title;
         private final String imageURL;
         private String synopsis;
         private String releaseDate;
         private String rating;
+        private String votes;
 
         public MovieBuilder(String title, String imageURL) {
             this.title = title;
@@ -66,6 +73,10 @@ public class Movie implements Serializable {
 
         public MovieBuilder rating(String rating) {
             this.rating = rating;
+            return this;
+        }
+        public MovieBuilder votes(String votes) {
+            this.votes = votes;
             return this;
         }
 

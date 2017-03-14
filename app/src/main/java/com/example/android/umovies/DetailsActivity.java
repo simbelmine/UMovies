@@ -13,6 +13,8 @@ import com.example.android.umovies.Transformations.BlurTransformation;
 import com.example.android.umovies.utilities.ImageUtils;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 /**
  * Created by Sve on 3/10/17.
  */
@@ -26,6 +28,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView titleView;
     private TextView releaseDateView;
     private TextView synopsisView;
+    private TextView votesView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class DetailsActivity extends AppCompatActivity {
                     .fit()
                     .into(movieImage);
             titleView.setText(movie.getTitle());
+            votesView.setText("(" + movie.getVotes() + " votes)");
             ratingView.setText(movie.getRating()+"/10");
             releaseDateView.setText(movie.getReleaseDate());
             synopsisView.setText(movie.getSynopsis());
@@ -83,6 +87,7 @@ public class DetailsActivity extends AppCompatActivity {
         blurImage = (ImageView) findViewById(R.id.iv_blur_img);
         movieImage = (ImageView) findViewById(R.id.iv_tumbnail_img);
         titleView = (TextView) findViewById(R.id.tv_movie_name);
+        votesView = (TextView) findViewById(R.id.tv_votes);
         ratingView = (TextView) findViewById(R.id.tv_rating);
         releaseDateView = (TextView) findViewById(R.id.tv_movie_release_date);
         synopsisView = (TextView) findViewById(R.id.tv_movie_synopsis);
