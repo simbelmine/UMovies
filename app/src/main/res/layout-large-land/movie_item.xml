@@ -14,7 +14,7 @@
         card_view:cardCornerRadius="@dimen/poster_card_corner_radius">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/poster_height_regular_land">
+        android:layout_height="@dimen/poster_height_large_land">
         <ImageView
             android:id="@+id/iv_item_img"
             android:layout_width="match_parent"

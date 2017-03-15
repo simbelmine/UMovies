@@ -2,14 +2,14 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/standard_margin">
     <TextView
         android:id="@+id/revenue_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/txt_large_size"
         android:text="Revenue"
         />
     <TextView
@@ -18,5 +18,5 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/revenue_lbl"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="@dimen/txt_regular_size" />
 </RelativeLayout>

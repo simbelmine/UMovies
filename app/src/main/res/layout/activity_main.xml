@@ -44,7 +44,7 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/text_line_padding"
                     android:text="@string/no_movies_message1"
-                    android:textSize="@dimen/txt_size16"
+                    android:textSize="@dimen/txt_error_large"
                     android:textColor="@color/colorAccent"
                     android:fontFamily="serif"
                     />
@@ -55,7 +55,7 @@
                     android:layout_below="@+id/tv_no_movies_msg"
                     android:gravity="center"
                     android:text="@string/no_movies_message2"
-                    android:textSize="@dimen/txt_size14"
+                    android:textSize="@dimen/txt_error_small"
                     android:textColor="@color/white"
                     android:fontFamily="serif"
                     />
