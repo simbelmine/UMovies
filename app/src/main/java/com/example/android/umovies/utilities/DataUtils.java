@@ -1,9 +1,12 @@
 package com.example.android.umovies.utilities;
 
 import android.content.Context;
-import android.util.Log;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.TextView;
 
-import com.example.android.umovies.MainActivity;
 import com.example.android.umovies.Movie;
 import com.example.android.umovies.R;
 
@@ -19,10 +22,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-/**
- * Created by Sve on 3/10/17.
- */
 
 public final class DataUtils {
 
@@ -147,6 +146,26 @@ public final class DataUtils {
             String genreName = currGenre.getString(GENRE_NAME);
             genresList.add(genreName);
         }
+    }
+
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public static void showNoNetworkMessage(Context context, View view) {
+        String errMessage = context.getResources().getString(R.string.no_network);
+        Snackbar errSnackbar = Snackbar.make(view, errMessage, Snackbar.LENGTH_LONG);
+        setSnackbarTextColor(context, errSnackbar);
+        errSnackbar.show();
+    }
+
+    private static void setSnackbarTextColor(Context context, Snackbar snackbar) {
+        View snackbarView = snackbar.getView();
+        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        TextView textView = (TextView) snackbarView.findViewById(snackbarTextId);
+        textView.setTextColor(context.getResources().getColor(R.color.colorAccent));
     }
 
     private static  List<Movie> movieListGlobal;

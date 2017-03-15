@@ -51,7 +51,17 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
             swipeRefreshLayout.setRefreshing(false);
         }
         else {
-            new FetchMovieDataTask().execute(this);
+            if(DataUtils.isOnline(this)) {
+                new FetchMovieDataTask().execute(this);
+                moviesRView.setVisibility(View.VISIBLE);
+                noMoviesMessage.setVisibility(View.INVISIBLE);
+            }
+            else {
+                moviesRView.setVisibility(View.INVISIBLE);
+                noMoviesMessage.setVisibility(View.VISIBLE);
+                swipeRefreshLayout.setRefreshing(false);
+                DataUtils.showNoNetworkMessage(this, mainContainer);
+            }
         }
     }
 
@@ -66,8 +76,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
                 moviesList = DataUtils.getMovieListDataFromJson(response);
 
                 return moviesList;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
                 return null;
             }
@@ -77,12 +86,8 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         protected void onPostExecute(List<Movie> movies) {
             swipeRefreshLayout.setRefreshing(false);
             if(movies != null && movies.size() > 0) {
-                noMoviesMessage.setVisibility(View.INVISIBLE);
                 populateMovieList(movies);
                 DataUtils.setMovieList(movies);
-            }
-            else {
-                noMoviesMessage.setVisibility(View.VISIBLE);
             }
         }
     }

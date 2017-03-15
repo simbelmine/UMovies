@@ -91,5 +91,4 @@
                 android:src="@mipmap/logo"/>
         </LinearLayout>
     </ScrollView>
-
 </FrameLayout>

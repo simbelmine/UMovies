@@ -76,9 +76,14 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void populateFromNetwork() {
-        if(!movie.isFullyUpdated()) {
-            String movieId = movie.getId();
-            new FetchAdditionalMovieData(this, movieId, movie).execute();
+        if(DataUtils.isOnline(this)) {
+            if (movie != null && !movie.isFullyUpdated()) {
+                String movieId = movie.getId();
+                new FetchAdditionalMovieData(this, movieId, movie).execute();
+            }
+        }
+        else {
+            DataUtils.showNoNetworkMessage(this, movieContainer);
         }
     }
 
