@@ -126,6 +126,10 @@ public final class DataUtils {
         String revenue = movieJson.getString(REVENUE);
 
         newMovie = new Movie.MovieBuilder(movie.getId(), movie.getTitle(), movie.getImageURL())
+                .releaseDate(movie.getReleaseDate())
+                .synopsis(movie.getSynopsis())
+                .rating(movie.getRating())
+                .votes(movie.getVotes())
                 .runtime(runtime)
                 .tagline(tagline)
                 .revenue(revenue)
@@ -143,5 +147,20 @@ public final class DataUtils {
             String genreName = currGenre.getString(GENRE_NAME);
             genresList.add(genreName);
         }
+    }
+
+    private static  List<Movie> movieListGlobal;
+
+    public static  List<Movie> getMovieList() {
+        return movieListGlobal;
+    }
+
+    public static  void setMovieList(List<Movie> movieList) {
+        movieListGlobal = movieList;
+    }
+
+    public static void updateMovie(Movie newMovie, int pos) {
+        newMovie.setIsFullyUpdated(true);
+        movieListGlobal.set(pos, newMovie);
     }
 }

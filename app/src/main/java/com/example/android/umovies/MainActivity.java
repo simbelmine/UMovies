@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     private static final int GRID_COLUMNS_PORTRAIT = 2;
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
     public static final String MOVIE_OBJ = "MovieObj";
+    public static final String MOVIE_POS = "MoviePosition";
     private FrameLayout mainContainer;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout noMoviesMessage;
@@ -44,7 +46,13 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     }
 
     private void fetchData() {
-        new FetchMovieDataTask().execute(this);
+        if(moviesList != null && moviesList.size() > 0) {
+            moviesList = DataUtils.getMovieList();
+            swipeRefreshLayout.setRefreshing(false);
+        }
+        else {
+            new FetchMovieDataTask().execute(this);
+        }
     }
 
     private class FetchMovieDataTask extends AsyncTask<Context, Void, List<Movie>> {
@@ -71,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
             if(movies != null && movies.size() > 0) {
                 noMoviesMessage.setVisibility(View.INVISIBLE);
                 populateMovieList(movies);
+                DataUtils.setMovieList(movies);
             }
             else {
                 noMoviesMessage.setVisibility(View.VISIBLE);
@@ -113,18 +122,20 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
     @Override
     public void onItemClick(int position) {
-        Movie currMovie = null;
+        Movie currMovie;
+        Intent intent = new Intent(this, DetailsActivity.class);
         if(moviesList != null) {
             currMovie = moviesList.get(position);
+            intent.putExtra(MOVIE_OBJ, currMovie);
+            intent.putExtra(MOVIE_POS, position);
         }
 
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra(MOVIE_OBJ, currMovie);
         startActivity(intent);
     }
 
     @Override
     public void onRefresh() {
+        moviesList = null;
         fetchData();
     }
 }

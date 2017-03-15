@@ -31,8 +31,6 @@ public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnCl
         movieImg = (ImageView) itemView.findViewById(R.id.iv_item_img);
         movieTitle = (TextView) itemView.findViewById(R.id.tv_item_title);
         progressBar = (ProgressBar) itemView.findViewById(R.id.pb_image_progress);
-
-        Log.v(MainActivity.TAG, "progressBar = " + progressBar);
     }
 
     @Override

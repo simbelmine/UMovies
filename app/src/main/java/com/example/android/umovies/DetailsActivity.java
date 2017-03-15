@@ -20,10 +20,6 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.util.List;
 
-/**
- * Created by Sve on 3/10/17.
- */
-
 public class DetailsActivity extends AppCompatActivity {
     private static final int BLUR_RADIUS = 25;
     private static final int TOTAL_COUNT_RATING_STARS = 5;
@@ -39,6 +35,8 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView revenueView;
     private TextView taglineView;
     private TextView genresView;
+    private Movie movie;
+    private int moviePos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,10 +44,9 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.details);
         initView();
 
-        Movie movie = getFromExtras();
+        getFromExtras();
         populateData(movie);
-        String movieId = movie.getId();
-        new FetchAdditionalMovieData(this, movieId, movie).execute();
+        populateFromNetwork();
     }
 
     private void populateData(Movie movie) {
@@ -68,6 +65,20 @@ public class DetailsActivity extends AppCompatActivity {
             ratingView.setText(getRating(movie.getRating()));
             releaseDateView.setText(movie.getReleaseDate());
             synopsisView.setText(movie.getSynopsis());
+
+            if(movie.isFullyUpdated()) {
+                runtimeView.setText(getRuntime(movie.getRuntime()));
+                revenueView.setText(getRevenue(movie.getRevenue()));
+                taglineView.setText(movie.getTagline());
+                genresView.setText(getGenres(movie.getGenres()));
+            }
+        }
+    }
+
+    private void populateFromNetwork() {
+        if(!movie.isFullyUpdated()) {
+            String movieId = movie.getId();
+            new FetchAdditionalMovieData(this, movieId, movie).execute();
         }
     }
 
@@ -81,18 +92,19 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-    private Movie getFromExtras() {
+    private void getFromExtras() {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
             Movie movie = (Movie)bundle.get(MainActivity.MOVIE_OBJ);
             if(movie != null) {
-                return movie;
+                this.movie = movie;
             }
             else {
-                return null;
+                this.movie = null;
             }
+
+            moviePos = bundle.getInt(MainActivity.MOVIE_POS, -1);
         }
-        return null;
     }
 
     private void initView() {
@@ -151,6 +163,7 @@ public class DetailsActivity extends AppCompatActivity {
                 revenueView.setText(getRevenue(movie.getRevenue()));
                 taglineView.setText(movie.getTagline());
                 genresView.setText(getGenres(movie.getGenres()));
+                DataUtils.updateMovie(movie, moviePos);
             }
         }
     }

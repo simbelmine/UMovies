@@ -13,10 +13,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Sve on 3/10/17.
- */
-
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
     private ItemClickListener itemClickListener;
     private List<Movie> movies;

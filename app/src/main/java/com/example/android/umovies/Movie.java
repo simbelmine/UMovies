@@ -20,7 +20,6 @@ public class Movie implements Serializable {
     private final String revenue;       // optional
     private final List<String> genres;  // optional
 
-
     private Movie(MovieBuilder builder) {
         this.id = builder.id;
         this.title = builder.title;
@@ -130,8 +129,7 @@ public class Movie implements Serializable {
             this.revenue = revenue;
             return this;
         }
-
-
+        
         public MovieBuilder genres(List<String> genres) {
             this.genres = genres;
             return this;
@@ -140,5 +138,13 @@ public class Movie implements Serializable {
         public Movie build() {
             return new Movie(this);
         }
+    }
+
+    private boolean isFullyUpdated;
+    public boolean isFullyUpdated() {
+        return isFullyUpdated;
+    }
+    public void setIsFullyUpdated(boolean isFullyUpdated) {
+        this.isFullyUpdated = isFullyUpdated;
     }
 }
