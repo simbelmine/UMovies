@@ -100,7 +100,7 @@ public class DetailsActivity extends AppCompatActivity {
     private void getFromExtras() {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
-            Movie movie = (Movie)bundle.get(MainActivity.MOVIE_OBJ);
+            Movie movie = bundle.getParcelable(MainActivity.MOVIE_OBJ);
             if(movie != null) {
                 this.movie = movie;
             }

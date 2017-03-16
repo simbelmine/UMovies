@@ -1,13 +1,15 @@
 package com.example.android.umovies;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Sve on 3/10/17.
  */
 
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
     private final String id;            // required
     private final String title;         // required
     private final String imageURL;      // required
@@ -33,6 +35,52 @@ public class Movie implements Serializable {
         this.revenue = builder.revenue;
         this.genres = builder.genres;
     }
+
+    private Movie(Parcel in){
+        this.id = in.readString();
+        this.title = in.readString();
+        this.imageURL = in.readString();
+        this.synopsis = in.readString();
+        this.releaseDate = in.readString();
+        this.rating = in.readString();
+        this.votes = in.readString();
+        this.tagline = in.readString();
+        this.runtime = in.readString();
+        this.revenue = in.readString();
+        this.genres = new ArrayList<>();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(imageURL);
+        dest.writeString(synopsis);
+        dest.writeString(releaseDate);
+        dest.writeString(rating);
+        dest.writeString(votes);
+        dest.writeString(tagline);
+        dest.writeString(runtime);
+        dest.writeString(revenue);
+        dest.writeStringList(genres);
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public String getId() {return id;}
 
