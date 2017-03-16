@@ -13,6 +13,11 @@ import android.util.Log;
 import com.example.android.umovies.MainActivity;
 import com.squareup.picasso.Transformation;
 
+// ************************************************************** //
+// *** Basic BlurTransformer for Square's Picasso *** //
+// *** Source: https://gist.github.com/ryanbateman/6667995.js *** //
+// ************************************************************** //
+
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class BlurTransformation implements Transformation {
