@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
     public static final String MOVIE_OBJ = "MovieObj";
     public static final String MOVIE_POS = "MoviePosition";
+    private static final String MOVIES_LIST_OBJ = "MoviesListObj";
     private FrameLayout mainContainer;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout noMoviesMessage;
@@ -41,9 +43,30 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         WindowUtils.initToolbarBar(this);
         initView();
         setupRecyclerView();
-        setRecyclerViewAdapter();
+        getSavedInstanceStates(savedInstanceState);
         fetchData();
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(MOVIES_LIST_OBJ, (ArrayList<? extends Parcelable>) moviesList);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void getSavedInstanceStates(Bundle savedInstanceState) {
+        updateMovieList(savedInstanceState);
+    }
+
+    private void updateMovieList(Bundle savedInstanceState) {
+        if(savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_LIST_OBJ)) {
+            moviesList = new ArrayList<>();
+        }
+        else {
+            moviesList = savedInstanceState.getParcelableArrayList(MOVIES_LIST_OBJ);
+            setRecyclerViewAdapter();
+        }
+    }
+
 
     private void fetchData() {
         if(moviesList != null && moviesList.size() > 0) {
@@ -96,10 +119,12 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         if(moviesAdapter != null) {
             moviesAdapter.populateMovies(movies);
         }
+        else {
+            setRecyclerViewAdapter();
+        }
     }
 
     private void setRecyclerViewAdapter() {
-        moviesList = new ArrayList<>();
         moviesAdapter = new MoviesAdapter(this, moviesList, this);
         moviesRView.setAdapter(moviesAdapter);
     }
