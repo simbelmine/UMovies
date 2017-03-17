@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.util.List;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements FetchSingleMovieTaskCompleteListener<Movie> {
     private static final int BLUR_RADIUS = 25;
     private static final int TOTAL_COUNT_RATING_STARS = 5;
     private FrameLayout movieContainer;
@@ -79,7 +79,7 @@ public class DetailsActivity extends AppCompatActivity {
         if(DataUtils.isOnline(this)) {
             if (movie != null && !movie.isFullyUpdated()) {
                 String movieId = movie.getId();
-                new FetchAdditionalMovieData(this, movieId, movie).execute();
+                new FetchSingleMovieTask(this, this, movieId, movie).execute();
             }
         }
         else {
@@ -131,45 +131,14 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-    private class FetchAdditionalMovieData extends AsyncTask<Void, Void, Movie> {
-        private Context context;
-        private String movieId;
-        private Movie movie;
-
-        FetchAdditionalMovieData(Context context, String movieId, Movie movie) {
-            this.context = context;
-            this.movieId = movieId;
-            this.movie = movie;
-        }
-
-        @Override
-        protected Movie doInBackground(Void... params) {
-            if(movieId != null && movie != null) {
-                URL url = DataUtils.getDBUrl(context, movieId);
-
-                try {
-                    String response = DataUtils.getResponseFromHTTP(url);
-                    Movie movieWithAdditionalData = DataUtils.getMovieAdditionalData(movie, response);
-
-                    return movieWithAdditionalData;
-                }
-                catch (Exception ex) {
-                    ex.printStackTrace();
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Movie movie) {
-            if(movie != null) {
-                runtimeView.setText(getRuntime(movie.getRuntime()));
-                revenueView.setText(getRevenue(movie.getRevenue()));
-                taglineView.setText(movie.getTagline());
-                genresView.setText(getGenres(movie.getGenres()));
-                DataUtils.updateMovie(movie, moviePos);
-            }
+    @Override
+    public void onTaskCompleted(Movie movie) {
+        if(movie != null) {
+            runtimeView.setText(getRuntime(movie.getRuntime()));
+            revenueView.setText(getRevenue(movie.getRevenue()));
+            taglineView.setText(movie.getTagline());
+            genresView.setText(getGenres(movie.getGenres()));
+            DataUtils.updateMovie(movie, moviePos);
         }
     }
 

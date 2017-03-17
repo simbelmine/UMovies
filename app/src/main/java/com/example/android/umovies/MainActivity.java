@@ -22,7 +22,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements
+        ItemClickListener, SwipeRefreshLayout.OnRefreshListener, FetchMoviesTaskCompleteListener<Movie> {
     public static final String TAG = "uMovies";
     private static final int GRID_COLUMNS_PORTRAIT = 2;
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         }
         else {
             if(DataUtils.isOnline(this)) {
-                new FetchMovieDataTask().execute(this);
+                new FetchMoviesTask(this, this).execute();
                 moviesRView.setVisibility(View.VISIBLE);
                 noMoviesMessage.setVisibility(View.INVISIBLE);
             }
@@ -88,30 +89,13 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         }
     }
 
-    private class FetchMovieDataTask extends AsyncTask<Context, Void, List<Movie>> {
-        @Override
-        protected List<Movie> doInBackground(Context... params) {
-            Context context = params[0];
-            URL url = DataUtils.getDBUrl(context, null);
-
-            try {
-                String response = DataUtils.getResponseFromHTTP(url);
-                moviesList = DataUtils.getMovieListDataFromJson(response);
-
-                return moviesList;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            swipeRefreshLayout.setRefreshing(false);
-            if(movies != null && movies.size() > 0) {
-                populateMovieList(movies);
-                DataUtils.setMovieList(movies);
-            }
+    @Override
+    public void onTaskCompleted(List<Movie> movies) {
+        moviesList = movies;
+        swipeRefreshLayout.setRefreshing(false);
+        if(movies != null && movies.size() > 0) {
+            populateMovieList(movies);
+            DataUtils.setMovieList(movies);
         }
     }
 
