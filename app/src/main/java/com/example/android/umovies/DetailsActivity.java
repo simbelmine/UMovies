@@ -1,12 +1,9 @@
 package com.example.android.umovies;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +14,6 @@ import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.ImageUtils;
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity implements FetchSingleMovieTaskCompleteListener<Movie> {
@@ -83,7 +79,7 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
             }
         }
         else {
-            DataUtils.showNoNetworkMessage(this, movieContainer);
+            DataUtils.showSnackbarMessage(this, movieContainer, getResources().getString(R.string.no_network));
         }
     }
 

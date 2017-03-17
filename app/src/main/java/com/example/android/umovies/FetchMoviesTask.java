@@ -27,7 +27,7 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, List<Movie>> {
         URL url = DataUtils.getDBUrl(context, null);
 
         try {
-            String response = DataUtils.getResponseFromHTTP(url);
+            String response = DataUtils.getResponseFromHTTP(context, url);
             moviesList = DataUtils.getMovieListDataFromJson(response);
 
             return moviesList;

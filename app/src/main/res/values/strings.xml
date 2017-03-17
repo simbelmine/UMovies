@@ -12,6 +12,7 @@
     <string name="no_movies_message2">Please try later.</string>
 
     <string name="no_network">No Internet. Please try again later.</string>
+    <string name="http_fail_msg">Something went wrong. Please try again later.</string>
 
     <!-- Details -->
     <string name="rating_lbl">Rating</string>

@@ -1,5 +1,6 @@
 package com.example.android.umovies.utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -23,6 +24,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public final class DataUtils {
 
@@ -57,24 +62,35 @@ public final class DataUtils {
         return url;
     }
 
-    public static String getResponseFromHTTP(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        try{
-            InputStream input = connection.getInputStream();
-            Scanner scanner = new Scanner(input);
-            scanner.useDelimiter("\\A");
+    private static final int  RESPONSE_LOWER_LIMIT = 200;
+    private static final int  RESPONSE_UPPER_LIMIT = 300;
+    public static String getResponseFromHTTP(final Context context, URL url) {
+        // Test URL : url = new URL("http://www.google.com:81");
+        String resultJsonStr = null;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
 
-            boolean hasNext = scanner.hasNext();
-            if(hasNext) {
-                return scanner.next();
-            }
-            else {
-                return null;
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful() && (response.code() >= RESPONSE_LOWER_LIMIT && response.code() < RESPONSE_UPPER_LIMIT)) {
+                resultJsonStr = response.body().string();
+            } else {
+                showHttpFailureMsg(context);
             }
         }
-        finally {
-            connection.disconnect();
+        catch (IOException ex) {
+            showHttpFailureMsg(context);
         }
+
+        return resultJsonStr;
+    }
+
+    private static void showHttpFailureMsg(Context context) {
+        Activity activity = ((Activity)context);
+        View view = activity.findViewById(R.id.cl_main_container);
+        showSnackbarMessage(context, view, context.getResources().getString(R.string.http_fail_msg));
     }
 
     public static List<Movie> getMovieListDataFromJson(String jsonStr) throws JSONException {
@@ -165,9 +181,8 @@ public final class DataUtils {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static void showNoNetworkMessage(Context context, View view) {
-        String errMessage = context.getResources().getString(R.string.no_network);
-        Snackbar errSnackbar = Snackbar.make(view, errMessage, Snackbar.LENGTH_LONG);
+    public static void showSnackbarMessage(Context context, View view, String message) {
+        Snackbar errSnackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
         setSnackbarTextColor(context, errSnackbar);
         errSnackbar.show();
     }

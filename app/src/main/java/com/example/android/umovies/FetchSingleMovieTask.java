@@ -26,7 +26,7 @@ public class FetchSingleMovieTask extends AsyncTask<Void, Void, Movie> {
             URL url = DataUtils.getDBUrl(context, movieId);
 
             try {
-                String response = DataUtils.getResponseFromHTTP(url);
+                String response = DataUtils.getResponseFromHTTP(context, url);
                 Movie movieWithAdditionalData = DataUtils.getMovieAdditionalData(movie, response);
 
                 return movieWithAdditionalData;

@@ -1,8 +1,6 @@
 package com.example.android.umovies;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -10,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -18,7 +15,6 @@ import android.widget.RelativeLayout;
 import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.WindowUtils;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements
                 moviesRView.setVisibility(View.INVISIBLE);
                 noMoviesMessage.setVisibility(View.VISIBLE);
                 swipeRefreshLayout.setRefreshing(false);
-                DataUtils.showNoNetworkMessage(this, mainContainer);
+                DataUtils.showSnackbarMessage(this, mainContainer, getResources().getString(R.string.no_network));
             }
         }
     }
