@@ -3,6 +3,7 @@ package com.example.android.umovies.utilities;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
@@ -27,20 +28,30 @@ public final class DataUtils {
 
     public static URL getDBUrl(Context context, String id) {
         String baseUrl = context.getResources().getString(R.string.DATA_BASE_URL);
-        String movieUrl = context.getResources().getString(R.string.DATA_SINGLE_MOVIE_URL);
+        String paramPopular = context.getResources().getString(R.string.PARAM_POPULAR);
+        String paramTopRated = context.getResources().getString(R.string.PARAM_TOP_RATED);
         String apiKey = context.getResources().getString(R.string.API_KEY);
         String queryStr = context.getResources().getString(R.string.QUERY_STR);
         URL url = null;
-        try {
-            if(id == null) {
-                url = new URL(baseUrl + queryStr + apiKey);
-            }
-            else {
-                url = new URL(movieUrl + id + queryStr + apiKey);
-            }
+
+        String paramToAdd;
+        if(id == null) {
+            paramToAdd = paramPopular;
         }
-        catch (MalformedURLException ex) {
-            ex.printStackTrace();
+        else {
+            paramToAdd = id;
+        }
+
+        Uri uri = Uri.parse(baseUrl).buildUpon()
+                .appendPath(paramToAdd)
+                .appendQueryParameter(queryStr, apiKey)
+                .build();
+
+        try {
+            url = new URL(uri.toString());
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
         }
 
         return url;

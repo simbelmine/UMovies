@@ -41,13 +41,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesRVHolder> {
         String imageUrl = currMovie.getImageURL();
 
         holder.movieTitle.setText(title);
-        holder.progressBar.setVisibility(View.VISIBLE);
 
         String imageUrlStr = ImageUtils.getImageUrl(imageUrl);
         Picasso.with(context)
                 .load(imageUrlStr)
                 .fit()
-                .into(holder.movieImg, ImageUtils.getImageCallback(holder.progressBar));
+                .placeholder(R.mipmap.movie_placeholder)
+                .into(holder.movieImg);
     }
 
     @Override
