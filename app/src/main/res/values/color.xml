@@ -4,17 +4,18 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
 
-    <color name="white">#ffffff</color>
     <color name="gray700">#616161</color>
     <color name="gray800">#424242</color>
     <color name="gray850">#282828</color>
-    <color name="gray900">#212121</color>
-
-    <color name="main">#081c24</color>
-    <color name="secondary">#00d474</color>
-
-
-    <color name="transparentGray900_50">#80212121</color>
-    <color name="transparentGray900_40">#B3000000</color>
     <color name="transparent">#33000000</color>
+
+    <color name="main_text_color">#ffffff</color>
+    <color name="main_color">#081c24</color>
+    <color name="secondary_color">#00d474</color>
+    <color name="dark_background">#212121</color>
+
+
+    <color name="transparent_item_overlay">#80212121</color>
+    <color name="transparent_bg_overlay">#B3000000</color>
+
 </resources>

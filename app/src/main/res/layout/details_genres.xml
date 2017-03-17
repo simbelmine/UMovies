@@ -8,7 +8,7 @@
         android:id="@+id/tv_movie_genres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/secondary"
+        android:textColor="@color/secondary_color"
         android:textSize="@dimen/txt_large_size"
         android:textStyle="bold"/>
 </LinearLayout>

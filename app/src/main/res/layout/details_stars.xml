@@ -17,5 +17,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/standard_margin"
         android:textSize="@dimen/txt_regular_size"
-        android:textColor="@color/white"/>
+        android:textColor="@color/main_text_color"/>
 </LinearLayout>

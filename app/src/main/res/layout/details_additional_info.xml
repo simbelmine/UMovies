@@ -12,16 +12,16 @@
             android:id="@+id/rating_lbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/main_text_color"
             android:textSize="@dimen/txt_large_size"
-            android:text="Rating"
+            android:text="@string/rating_lbl"
             />
         <TextView
             android:id="@+id/tv_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rating_lbl"
-            android:textColor="@color/white"
+            android:textColor="@color/main_text_color"
             android:textSize="@dimen/txt_regular_size"/>
     </RelativeLayout>
     <RelativeLayout
@@ -32,16 +32,16 @@
             android:id="@+id/release_date_lbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/main_text_color"
             android:textSize="@dimen/txt_large_size"
-            android:text="Release Date"
+            android:text="@string/release_date_lbl"
             />
         <TextView
             android:id="@+id/tv_movie_release_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/release_date_lbl"
-            android:textColor="@color/white"
+            android:textColor="@color/main_text_color"
             android:textSize="@dimen/txt_regular_size" />
     </RelativeLayout>
     <RelativeLayout
@@ -52,16 +52,16 @@
             android:id="@+id/runtime_lbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/main_text_color"
             android:textSize="@dimen/txt_large_size"
-            android:text="Runtime"
+            android:text="@string/runtime_lbl"
             />
         <TextView
             android:id="@+id/tv_movie_runtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/runtime_lbl"
-            android:textColor="@color/white"
+            android:textColor="@color/main_text_color"
             android:textSize="@dimen/txt_regular_size" />
     </RelativeLayout>
 </LinearLayout>

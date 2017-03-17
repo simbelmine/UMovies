@@ -10,4 +10,12 @@
     <string name="no_movies_message2">Please try later.</string>
 
     <string name="no_network">No Internet. Please try again later.</string>
+
+    <!-- Details -->
+    <string name="rating_lbl">Rating</string>
+    <string name="release_date_lbl">Release Date</string>
+    <string name="runtime_lbl">Runtime</string>
+    <string name="revenue_lbl">Revenue</string>
+    <string name="synopsis_lbl">Synopsis</string>
+    <string name="images_lbl">Images</string>
 </resources>

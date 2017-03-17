@@ -8,15 +8,15 @@
         android:id="@+id/revenue_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:textColor="@color/main_text_color"
         android:textSize="@dimen/txt_large_size"
-        android:text="Revenue"
+        android:text="@string/revenue_lbl"
         />
     <TextView
         android:id="@+id/tv_movie_revenue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/revenue_lbl"
-        android:textColor="@color/white"
+        android:textColor="@color/main_text_color"
         android:textSize="@dimen/txt_regular_size" />
 </RelativeLayout>

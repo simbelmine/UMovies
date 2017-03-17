@@ -19,19 +19,19 @@
             android:id="@+id/iv_item_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/gray900"
+            android:background="@color/dark_background"
             />
         <TextView
             android:id="@+id/tv_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/main_text_color"
             android:layout_gravity="bottom"
             android:padding = "@dimen/standard_padding"
             android:layout_alignParentBottom="true"
             android:fontFamily="serif"
             android:textSize="@dimen/txt_card_size"
-            android:background="@color/transparentGray900_50"
+            android:background="@color/transparent_item_overlay"
             android:ellipsize="end"
             android:maxLines="1"
             />

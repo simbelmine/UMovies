@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main"
+    android:background="@color/main_color"
     android:id="@+id/ll_container">
     <ImageView
         android:id="@+id/iv_blur_img"
@@ -14,7 +14,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparentGray900_40" />
+        android:background="@color/transparent_bg_overlay" />
     <ScrollView
         android:fillViewport="true"
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                 android:id="@+id/tv_movie_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/main_text_color"
                 android:textSize="@dimen/txt_title_size"
                 android:layout_marginTop="@dimen/area_margin_top"
                 />
@@ -45,22 +45,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/txt_regular_size"
-                android:textColor="@color/white"
+                android:textColor="@color/main_text_color"
                 android:layout_marginTop="@dimen/tagline_margin_top"
                 />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/txt_large_size"
-                android:textStyle="bold"
                 android:layout_marginTop="@dimen/area_margin_top"
-                android:text="Synopsis"/>
+                android:text="@string/synopsis_lbl"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/txt_large_size"
+                android:textStyle="bold" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/separator_height"
-                android:background="@color/white"/>
+                android:background="@color/main_text_color"/>
 
             <TextView
                 android:id="@+id/tv_movie_synopsis"
@@ -68,20 +68,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_margin"
                 android:textSize="@dimen/txt_regular_size"
-                android:textColor="@color/white" />
+                android:textColor="@color/main_text_color" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/txt_large_size"
-                android:textStyle="bold"
                 android:layout_marginTop="@dimen/area_margin_top"
-                android:text="Images"/>
+                android:text="@string/images_lbl"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/txt_large_size"
+                android:textStyle="bold" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/separator_height"
-                android:background="@color/white"/>
+                android:background="@color/main_text_color"/>
 
             <ImageView
                 android:id="@+id/iv_tumbnail_img"

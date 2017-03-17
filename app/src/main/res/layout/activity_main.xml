@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/main"
+    android:background="@color/main_color"
     >
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_movies_swipe_container"
@@ -33,7 +33,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main"
+            android:background="@color/main_color"
             android:elevation="4dp"
             app:layout_scrollFlags="scroll|enterAlways"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
