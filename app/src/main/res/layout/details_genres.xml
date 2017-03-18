@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_marginTop="@dimen/standard_margin">
     <TextView
@@ -10,5 +11,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/secondary_color"
         android:textSize="@dimen/txt_large_size"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        tools:text="@string/dummy_movie_genres"/>
 </LinearLayout>

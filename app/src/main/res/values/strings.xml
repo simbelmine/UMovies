@@ -21,4 +21,16 @@
     <string name="revenue_lbl">Revenue</string>
     <string name="synopsis_lbl">Synopsis</string>
     <string name="images_lbl">Images</string>
+
+    <!-- Details Dummy Text -->
+    <string name="dummy_movie_name">The Awesome Movie Name</string>
+    <string name="dummy_movie_tagline">To be or not to be. That is the question.</string>
+    <string name="dummy_movie_synopsis">Brief condensation, outline, or summary of the main points of an articles, book, or plan.
+        Unlike an abstract, a synopsis maintains the point by point sequence of the salient ideas.</string>
+    <string name="dummy_movie_rating">4.5/5</string>
+    <string name="dummy_movie_release_date">2016-11-28</string>
+    <string name="dummy_movie_runtime">1 hr. 30 min.</string>
+    <string name="dummy_movie_revenue">$7.8M</string>
+    <string name="dummy_movie_genres">Action   Drama   Comedy</string>
+    <string name="dummy_movie_votes">(166 votes)</string>
 </resources>

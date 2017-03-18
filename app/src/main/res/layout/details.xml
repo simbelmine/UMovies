@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,6 +34,7 @@
                 android:textColor="@color/main_text_color"
                 android:textSize="@dimen/txt_title_size"
                 android:layout_marginTop="@dimen/area_margin_top"
+                tools:text="@string/dummy_movie_name"
                 />
             <include layout="@layout/details_stars"/>
             <include layout="@layout/details_additional_info"/>
@@ -47,7 +48,7 @@
                 android:textSize="@dimen/txt_regular_size"
                 android:textColor="@color/main_text_color"
                 android:layout_marginTop="@dimen/tagline_margin_top"
-                />
+                tools:text="@string/dummy_movie_tagline"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -68,7 +69,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_margin"
                 android:textSize="@dimen/txt_regular_size"
-                android:textColor="@color/main_text_color" />
+                android:textColor="@color/main_text_color"
+                tools:text="@string/dummy_movie_synopsis"/>
 
             <TextView
                 android:layout_width="match_parent"
