@@ -16,21 +16,24 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailsActivity extends AppCompatActivity implements FetchSingleMovieTaskCompleteListener<Movie> {
     private static final int BLUR_RADIUS = 25;
     private static final int TOTAL_COUNT_RATING_STARS = 5;
-    private FrameLayout movieContainer;
-    private ImageView blurImage;
-    private ImageView movieImage;
-    private TextView ratingView;
-    private TextView titleView;
-    private TextView releaseDateView;
-    private TextView synopsisView;
-    private TextView votesView;
-    private TextView runtimeView;
-    private TextView revenueView;
-    private TextView taglineView;
-    private TextView genresView;
+    @BindView(R.id.ll_container) FrameLayout movieContainer;
+    @BindView(R.id.iv_blur_img) ImageView blurImage;
+    @BindView(R.id.iv_tumbnail_img) ImageView movieImage;
+    @BindView(R.id.tv_rating) TextView ratingView;
+    @BindView(R.id.tv_movie_name) TextView titleView;
+    @BindView(R.id.tv_movie_release_date) TextView releaseDateView;
+    @BindView(R.id.tv_movie_synopsis) TextView synopsisView;
+    @BindView(R.id.tv_votes) TextView votesView;
+    @BindView(R.id.tv_movie_runtime) TextView runtimeView;
+    @BindView(R.id.tv_movie_revenue) TextView revenueView;
+    @BindView(R.id.tv_movie_tagline) TextView taglineView;
+    @BindView(R.id.tv_movie_genres) TextView genresView;
     private Movie movie;
     private int moviePos;
 
@@ -38,8 +41,9 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details);
-        initView();
+        ButterKnife.bind(this);
 
+        initView();
         getFromExtras();
         populateData(movie);
         populateFromNetwork();
@@ -109,19 +113,6 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
     }
 
     private void initView() {
-        movieContainer = (FrameLayout) findViewById(R.id.ll_container);
-        blurImage = (ImageView) findViewById(R.id.iv_blur_img);
-        movieImage = (ImageView) findViewById(R.id.iv_tumbnail_img);
-        titleView = (TextView) findViewById(R.id.tv_movie_name);
-        votesView = (TextView) findViewById(R.id.tv_votes);
-        ratingView = (TextView) findViewById(R.id.tv_rating);
-        releaseDateView = (TextView) findViewById(R.id.tv_movie_release_date);
-        runtimeView = (TextView) findViewById(R.id.tv_movie_runtime);
-        revenueView = (TextView) findViewById(R.id.tv_movie_revenue);
-        genresView = (TextView) findViewById(R.id.tv_movie_genres);
-        taglineView = (TextView) findViewById(R.id.tv_movie_tagline);
-        synopsisView = (TextView) findViewById(R.id.tv_movie_synopsis);
-
         if(Build.VERSION.SDK_INT >= 21) {
             movieContainer.setPadding(0, (int)getResources().getDimension(R.dimen.padding_from_top_toolbar), 0, 0);
         }

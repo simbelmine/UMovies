@@ -8,27 +8,28 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Sve on 3/10/17.
  */
 
 public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    protected LinearLayout movieContainer;
-    protected ImageView movieImg;
-    protected TextView movieTitle;
+    @BindView(R.id.fl_item_movie_container) LinearLayout movieContainer;
+    @BindView(R.id.iv_item_img) ImageView movieImg;
+    @BindView(R.id.tv_item_title) TextView movieTitle;
     protected ItemClickListener itemClickListener;
 
     public MoviesRVHolder(View itemView, ItemClickListener itemClickListener) {
         super(itemView);
         this.itemClickListener = itemClickListener;
-        initItemView(itemView);
+        ButterKnife.bind(this, itemView);
+        initItemView();
     }
 
-    private void initItemView(View itemView) {
-        movieContainer = (LinearLayout) itemView.findViewById(R.id.fl_item_movie_container);
+    private void initItemView() {
         movieContainer.setOnClickListener(this);
-        movieImg = (ImageView) itemView.findViewById(R.id.iv_item_img);
-        movieTitle = (TextView) itemView.findViewById(R.id.tv_item_title);
     }
 
     @Override

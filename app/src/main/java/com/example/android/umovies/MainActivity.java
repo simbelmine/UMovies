@@ -18,6 +18,9 @@ import com.example.android.umovies.utilities.WindowUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements
         ItemClickListener, SwipeRefreshLayout.OnRefreshListener, FetchMoviesTaskCompleteListener<Movie> {
     public static final String TAG = "uMovies";
@@ -26,10 +29,10 @@ public class MainActivity extends AppCompatActivity implements
     public static final String MOVIE_OBJ = "MovieObj";
     public static final String MOVIE_POS = "MoviePosition";
     private static final String MOVIES_LIST_OBJ = "MoviesListObj";
-    private FrameLayout mainContainer;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private RelativeLayout noMoviesMessage;
-    private RecyclerView moviesRView;
+    @BindView(R.id.cl_main_container) FrameLayout mainContainer;
+    @BindView(R.id.srl_movies_swipe_container) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.rl_no_movies_container) RelativeLayout noMoviesMessage;
+    @BindView(R.id.rv_movies) RecyclerView moviesRView;
     private MoviesAdapter moviesAdapter;
     private List<Movie> moviesList;
 
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         WindowUtils.initToolbarBar(this);
+        ButterKnife.bind(this);
+
         initView();
         setupRecyclerView();
         getSavedInstanceStates(savedInstanceState);
@@ -119,11 +124,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initView() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_movies_swipe_container);
         swipeRefreshLayout.setOnRefreshListener(this);
-        noMoviesMessage = (RelativeLayout) findViewById(R.id.rl_no_movies_container);
-        moviesRView = (RecyclerView) findViewById(R.id.rv_movies);
-        mainContainer = (FrameLayout) findViewById(R.id.cl_main_container);
 
         if(Build.VERSION.SDK_INT >= 21) {
             mainContainer.setPadding(0, (int)getResources().getDimension(R.dimen.padding_from_top_toolbar), 0, 0);
