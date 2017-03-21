@@ -100,7 +100,7 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
     private void getFromExtras() {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
-            Movie movie = bundle.getParcelable(MainActivity.MOVIE_OBJ);
+            Movie movie = bundle.getParcelable(MoviesFragment.MOVIE_OBJ);
             if(movie != null) {
                 this.movie = movie;
             }
@@ -108,7 +108,7 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
                 this.movie = null;
             }
 
-            moviePos = bundle.getInt(MainActivity.MOVIE_POS, -1);
+            moviePos = bundle.getInt(MoviesFragment.MOVIE_POS, -1);
         }
     }
 

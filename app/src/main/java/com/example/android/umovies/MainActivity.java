@@ -1,152 +1,74 @@
 package com.example.android.umovies;
 
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
-import com.example.android.umovies.utilities.DataUtils;
+import com.example.android.umovies.Transformations.ZoomOutPageTransformer;
 import com.example.android.umovies.utilities.WindowUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements
-        ItemClickListener, SwipeRefreshLayout.OnRefreshListener, FetchMoviesTaskCompleteListener<Movie> {
+public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
     public static final String TAG = "uMovies";
-    private static final int GRID_COLUMNS_PORTRAIT = 2;
-    private static final int GRID_COLUMNS_LANDSCAPE = 3;
-    public static final String MOVIE_OBJ = "MovieObj";
-    public static final String MOVIE_POS = "MoviePosition";
-    private static final String MOVIES_LIST_OBJ = "MoviesListObj";
-    @BindView(R.id.cl_main_container) FrameLayout mainContainer;
-    @BindView(R.id.srl_movies_swipe_container) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.rl_no_movies_container) RelativeLayout noMoviesMessage;
-    @BindView(R.id.rv_movies) RecyclerView moviesRView;
-    private MoviesAdapter moviesAdapter;
-    private List<Movie> moviesList;
+    private static final int TAB_COUNT = 3;
+    @BindView(R.id.viewPager)
+    ViewPager viewPager;
+    @BindView(R.id.tabLayout) TabLayout tabLayout;
+    private ViewPagerAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         WindowUtils.initToolbarBar(this);
         ButterKnife.bind(this);
 
-        initView();
-        setupRecyclerView();
-        getSavedInstanceStates(savedInstanceState);
-        fetchData();
+        setupViewPager(viewPager);
+        setupTabLayout();
+        setViewPagerCachedTabs();
+        setViewPagerTransformation();
+    }
+
+    private void setViewPagerCachedTabs() {
+        // In current Application design, it's a relatively small number
+        int cachedPageLimit = viewPager.getAdapter().getCount()-1;
+        viewPager.setOffscreenPageLimit(cachedPageLimit);
+    }
+
+    private void setViewPagerTransformation() {
+        viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+    }
+
+    private void setupTabLayout() {
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(this);
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        String[] tabTitles = getResources().getStringArray(R.array.tab_titles);
+
+        for(int i = 0; i < TAB_COUNT; i++) {
+            adapter.addFrag(MoviesFragment.newInstance(i), tabTitles[i]);
+        }
+        viewPager.setAdapter(adapter);
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(MOVIES_LIST_OBJ, (ArrayList<? extends Parcelable>) moviesList);
-        super.onSaveInstanceState(outState);
-    }
-
-    private void getSavedInstanceStates(Bundle savedInstanceState) {
-        updateMovieList(savedInstanceState);
-    }
-
-    private void updateMovieList(Bundle savedInstanceState) {
-        if(savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_LIST_OBJ)) {
-            moviesList = new ArrayList<>();
-        }
-        else {
-            moviesList = savedInstanceState.getParcelableArrayList(MOVIES_LIST_OBJ);
-            setRecyclerViewAdapter();
-        }
-    }
-
-
-    private void fetchData() {
-        if(moviesList != null && moviesList.size() > 0) {
-            moviesList = DataUtils.getMovieList();
-            swipeRefreshLayout.setRefreshing(false);
-        }
-        else {
-            if(DataUtils.isOnline(this)) {
-                new FetchMoviesTask(this, this).execute();
-                moviesRView.setVisibility(View.VISIBLE);
-                noMoviesMessage.setVisibility(View.INVISIBLE);
-            }
-            else {
-                moviesRView.setVisibility(View.INVISIBLE);
-                noMoviesMessage.setVisibility(View.VISIBLE);
-                swipeRefreshLayout.setRefreshing(false);
-                DataUtils.showSnackbarMessage(this, mainContainer, getResources().getString(R.string.no_network));
-            }
-        }
+    public void onTabSelected(TabLayout.Tab tab) {
+        viewPager.setCurrentItem(tab.getPosition(), true);
     }
 
     @Override
-    public void onTaskCompleted(List<Movie> movies) {
-        moviesList = movies;
-        swipeRefreshLayout.setRefreshing(false);
-        if(movies != null && movies.size() > 0) {
-            populateMovieList(movies);
-            DataUtils.setMovieList(movies);
-        }
-    }
-
-    private void populateMovieList(List<Movie> movies) {
-        if(moviesAdapter != null) {
-            moviesAdapter.populateMovies(movies);
-        }
-        else {
-            setRecyclerViewAdapter();
-        }
-    }
-
-    private void setRecyclerViewAdapter() {
-        moviesAdapter = new MoviesAdapter(this, moviesList, this);
-        moviesRView.setAdapter(moviesAdapter);
-    }
-
-    private void setupRecyclerView() {
-        final GridLayoutManager layoutManager;
-        if(getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE)
-            layoutManager = new GridLayoutManager(this, GRID_COLUMNS_LANDSCAPE);
-        else
-            layoutManager = new GridLayoutManager(this, GRID_COLUMNS_PORTRAIT);
-        moviesRView.setLayoutManager(layoutManager);
-    }
-
-    private void initView() {
-        swipeRefreshLayout.setOnRefreshListener(this);
-
-        if(Build.VERSION.SDK_INT >= 21) {
-            mainContainer.setPadding(0, (int)getResources().getDimension(R.dimen.padding_from_top_toolbar), 0, 0);
-        }
+    public void onTabReselected(TabLayout.Tab tab) {
     }
 
     @Override
-    public void onItemClick(int position) {
-        Movie currMovie;
-        Intent intent = new Intent(this, DetailsActivity.class);
-        if(moviesList != null) {
-            currMovie = moviesList.get(position);
-            intent.putExtra(MOVIE_OBJ, currMovie);
-            intent.putExtra(MOVIE_POS, position);
-        }
+    public void onTabUnselected(TabLayout.Tab tab) {
 
-        startActivity(intent);
-    }
-
-    @Override
-    public void onRefresh() {
-        moviesList = null;
-        fetchData();
     }
 }

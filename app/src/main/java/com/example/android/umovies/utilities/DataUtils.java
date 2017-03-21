@@ -31,17 +31,15 @@ import okhttp3.Response;
 
 public final class DataUtils {
 
-    public static URL getDBUrl(Context context, String id) {
+    public static URL getDBUrl(Context context, int fragmentPosition, String id) {
         String baseUrl = context.getResources().getString(R.string.DATA_BASE_URL);
-        String paramPopular = context.getResources().getString(R.string.PARAM_POPULAR);
-        String paramTopRated = context.getResources().getString(R.string.PARAM_TOP_RATED);
         String apiKey = context.getResources().getString(R.string.API_KEY);
         String queryStr = context.getResources().getString(R.string.QUERY_STR);
         URL url = null;
 
         String paramToAdd;
         if(id == null) {
-            paramToAdd = paramPopular;
+            paramToAdd = getUrlExtension(context, fragmentPosition);
         }
         else {
             paramToAdd = id;
@@ -60,6 +58,20 @@ public final class DataUtils {
         }
 
         return url;
+    }
+
+    private static String getUrlExtension(Context context, int fragmentPosition) {
+        String paramPopular = context.getResources().getString(R.string.PARAM_POPULAR);
+        String paramTopRated = context.getResources().getString(R.string.PARAM_TOP_RATED);
+
+        switch (fragmentPosition) {
+            case 0:
+                return paramPopular;
+            case 1:
+                return paramTopRated;
+            default:
+                return paramPopular;
+        }
     }
 
     private static final int  RESPONSE_LOWER_LIMIT = 200;

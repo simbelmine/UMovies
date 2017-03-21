@@ -7,24 +7,6 @@
     android:animateLayoutChanges="true"
     android:background="@color/main_color"
     >
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/srl_movies_swipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <FrameLayout
-            android:id="@+id/cl_main_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_movies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
-            <include layout="@layout/error_no_movies"/>
-        </FrameLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -38,6 +20,20 @@
             app:layout_scrollFlags="scroll|enterAlways"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabTextColor="@color/main_text_color"
+            app:tabSelectedTextColor="@color/secondary_color"
+            app:tabIndicatorColor="@color/secondary_color"/>
     </android.support.design.widget.AppBarLayout>
-
+    <!-- Helps handing the Fragments for each Tab -->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="@color/main_color"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>

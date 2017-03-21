@@ -15,16 +15,18 @@ import java.util.List;
 public class FetchMoviesTask extends AsyncTask<Void, Void, List<Movie>> {
     private Context context;
     private List<Movie> moviesList;
+    private int fragmentPosition;
     private FetchMoviesTaskCompleteListener<Movie> listener;
 
-    public FetchMoviesTask(Context context, FetchMoviesTaskCompleteListener<Movie> listener) {
+    public FetchMoviesTask(Context context, int fragmentPosition, FetchMoviesTaskCompleteListener<Movie> listener) {
         this.context = context;
+        this.fragmentPosition = fragmentPosition;
         this.listener = listener;
     }
 
     @Override
     protected List<Movie> doInBackground(Void... params) {
-        URL url = DataUtils.getDBUrl(context, null);
+        URL url = DataUtils.getDBUrl(context, fragmentPosition, null);
 
         try {
             String response = DataUtils.getResponseFromHTTP(context, url);

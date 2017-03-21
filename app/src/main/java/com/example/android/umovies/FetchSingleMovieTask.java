@@ -23,7 +23,7 @@ public class FetchSingleMovieTask extends AsyncTask<Void, Void, Movie> {
     @Override
     protected Movie doInBackground(Void... params) {
         if(movieId != null && movie != null) {
-            URL url = DataUtils.getDBUrl(context, movieId);
+            URL url = DataUtils.getDBUrl(context, -1, movieId);
 
             try {
                 String response = DataUtils.getResponseFromHTTP(context, url);

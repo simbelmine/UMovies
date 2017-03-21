@@ -33,4 +33,10 @@
     <string name="dummy_movie_revenue">$7.8M</string>
     <string name="dummy_movie_genres">Action   Drama   Comedy</string>
     <string name="dummy_movie_votes">(166 votes)</string>
+
+    <string-array name="tab_titles">
+        <item>Popular</item>
+        <item>Top Rated</item>
+        <item>Favorites</item>
+    </string-array>
 </resources>

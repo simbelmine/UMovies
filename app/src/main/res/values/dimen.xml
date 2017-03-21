@@ -3,7 +3,7 @@
     <dimen name="standard_padding">16dp</dimen>
     <dimen name="standard_margin">16dp</dimen>
 
-    <!-- MainActivity posters -->
+    <!-- Main Activity posters -->
     <dimen name="poster_txt_lr_padding">6dp</dimen>
 
     <dimen name="poster_height_regular">300dp</dimen>
