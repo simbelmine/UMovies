@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +28,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MoviesFragment extends Fragment  implements
-        ItemClickListener, SwipeRefreshLayout.OnRefreshListener, FetchMoviesTaskCompleteListener<Movie>{
-    public static final String TAG = "uMovies";
+        ItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        LoaderManager.LoaderCallbacks<List<Movie>> {
+
     private static final int GRID_COLUMNS_PORTRAIT = 2;
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
     public static final String MOVIE_OBJ = "MovieObj";
     public static final String MOVIE_POS = "MoviePosition";
     private static final String MOVIES_LIST_OBJ = "MoviesListObj";
+    public static String FRAGMENT_POSITION = "FRAGMENT_POSITION";
+    private static final String MOVIES_LOADER_ID = "LoaderId";
     @BindView(R.id.cl_main_container) FrameLayout mainContainer;
     @BindView(R.id.srl_movies_swipe_container) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.rl_no_movies_container) RelativeLayout noMoviesMessage;
@@ -40,15 +47,16 @@ public class MoviesFragment extends Fragment  implements
     private List<Movie> moviesList;
     private int fragmentPosition;
     private Context context;
-
-    public static String POSITION = "POSITION";
+    private int loaderId;
+    private LoaderManager loaderManager;
 
     public MoviesFragment(){}
     public static MoviesFragment newInstance(int position) {
         MoviesFragment moviesFragment = new MoviesFragment();
 
         Bundle args = new Bundle();
-        args.putInt("pos", position);
+        args.putInt(FRAGMENT_POSITION, position);
+        args.putInt(MOVIES_LOADER_ID, position);
         moviesFragment.setArguments(args);
 
         return moviesFragment;
@@ -63,6 +71,7 @@ public class MoviesFragment extends Fragment  implements
         initView();
         setupRecyclerView();
         getSavedInstanceStates(savedInstanceState);
+        initLoader();
         fetchData(fragmentPosition);
 
         return view;
@@ -71,22 +80,33 @@ public class MoviesFragment extends Fragment  implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(MOVIES_LIST_OBJ, (ArrayList<? extends Parcelable>) moviesList);
-        outState.putInt(POSITION, fragmentPosition);
+        outState.putInt(MOVIES_LOADER_ID, loaderId);
+        outState.putInt(FRAGMENT_POSITION, fragmentPosition);
         super.onSaveInstanceState(outState);
     }
 
     private void getSavedInstanceStates(Bundle savedInstanceState) {
+        updateLoaderId(savedInstanceState);
         updateTabPosition(savedInstanceState);
         updateMovieList(savedInstanceState);
     }
 
-    private void updateTabPosition(Bundle savedInstanceState) {
-        if(savedInstanceState != null && savedInstanceState.containsKey(POSITION)) {
-            fragmentPosition = savedInstanceState.getInt(POSITION);
+    private void updateLoaderId(Bundle savedInstanceState) {
+        if(savedInstanceState != null && savedInstanceState.containsKey(MOVIES_LOADER_ID)) {
+            loaderId = savedInstanceState.getInt(MOVIES_LOADER_ID);
         }
         else {
-            Bundle bundle = getArguments();
-            int position = bundle.getInt("pos");
+            int id = getIntBundleExtra(MOVIES_LOADER_ID);
+            loaderId = id;
+        }
+    }
+
+    private void updateTabPosition(Bundle savedInstanceState) {
+        if(savedInstanceState != null && savedInstanceState.containsKey(FRAGMENT_POSITION)) {
+            fragmentPosition = savedInstanceState.getInt(FRAGMENT_POSITION);
+        }
+        else {
+            int position = getIntBundleExtra(FRAGMENT_POSITION);
             fragmentPosition = position;
         }
     }
@@ -101,10 +121,16 @@ public class MoviesFragment extends Fragment  implements
         }
     }
 
+    private int getIntBundleExtra(String extraName) {
+        Bundle bundle = getArguments();
+        return bundle.getInt(extraName);
+    }
+
+
     private void fetchData(int fragmentPosition) {
         if(moviesList == null || moviesList.size() == 0) {
             if (DataUtils.isOnline(context)) {
-                new FetchMoviesTask(context, fragmentPosition, this).execute();
+                loadFetchingMovies(fragmentPosition);
                 moviesRView.setVisibility(View.VISIBLE);
                 noMoviesMessage.setVisibility(View.INVISIBLE);
             } else {
@@ -116,23 +142,46 @@ public class MoviesFragment extends Fragment  implements
         }
     }
 
+    private void loadFetchingMovies(int fragmentPosition) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(FRAGMENT_POSITION, fragmentPosition);
+
+        Loader<List<Movie>> loader = getLoader();
+        if(loader == null) {
+            loaderManager.initLoader(loaderId, bundle, this);
+        }
+        else {
+            loaderManager.restartLoader(loaderId, bundle, this);
+        }
+    }
+
+    private Loader<List<Movie>> getLoader() {
+        return loaderManager.getLoader(loaderId);
+    }
+
     @Override
-    public void onTaskCompleted(List<Movie> movies) {
+    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
+        return new FetchMovieTaskLoader(context, args);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
         moviesList = movies;
+
         swipeRefreshLayout.setRefreshing(false);
         if(movies != null && movies.size() > 0) {
-            populateMovieList(movies);
+            populateMovieList();
             DataUtils.setMovieList(movies);
         }
     }
 
-    private void populateMovieList(List<Movie> movies) {
-//        if(moviesAdapter != null) {
-//            moviesAdapter.populateMovies(movies);
-//        }
-//        else {
-            setRecyclerViewAdapter();
-//        }
+    @Override
+    public void onLoaderReset(Loader<List<Movie>> loader) {
+
+    }
+
+    private void populateMovieList() {
+        setRecyclerViewAdapter();
     }
 
     private void setRecyclerViewAdapter() {
@@ -147,6 +196,11 @@ public class MoviesFragment extends Fragment  implements
         else
             layoutManager = new GridLayoutManager(context, GRID_COLUMNS_PORTRAIT);
         moviesRView.setLayoutManager(layoutManager);
+    }
+
+    private void initLoader() {
+        loaderManager = getActivity().getSupportLoaderManager();
+        loaderManager.initLoader(loaderId, null, this);
     }
 
     private void initView() {
