@@ -39,4 +39,6 @@
         <item>Top Rated</item>
         <item>Favorites</item>
     </string-array>
+
+    <string name="action_settings">Settings</string>
 </resources>

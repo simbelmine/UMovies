@@ -20,6 +20,7 @@ public class WindowUtils {
         if(Build.VERSION.SDK_INT >= 21) {
             toolbar.setPadding(0, ((int)context.getResources().getDimension(R.dimen.padding_from_top_toolbar)), 0, 0);
         }
+        toolbar.setOverflowIcon(context.getResources().getDrawable(R.mipmap.dots_vertical));
         ((AppCompatActivity)context).setSupportActionBar(toolbar);
     }
 }

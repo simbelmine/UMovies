@@ -12,6 +12,16 @@
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="actionOverflowMenuStyle">@style/MyApp.PopupMenu</item>
+        <item name="android:itemTextAppearance">@style/itemTextStyle.AppTheme</item>
+    </style>
+
+    <style name="MyApp.PopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@color/white</item>
+    </style>
+
+    <style name="itemTextStyle.AppTheme" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@color/main_color</item>
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">

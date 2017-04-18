@@ -9,6 +9,7 @@
     <color name="gray850">#282828</color>
     <color name="transparent">#33000000</color>
 
+    <color name="white">#ffffff</color>
     <color name="main_text_color">#ffffff</color>
     <color name="main_color">#081c24</color>
     <color name="secondary_color">#00d474</color>

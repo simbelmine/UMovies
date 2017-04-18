@@ -29,7 +29,6 @@
             android:layout_gravity="bottom"
             android:padding = "@dimen/standard_padding"
             android:layout_alignParentBottom="true"
-            android:fontFamily="serif"
             android:textSize="@dimen/txt_card_size"
             android:background="@color/transparent_item_overlay"
             android:ellipsize="end"
