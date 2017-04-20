@@ -21,6 +21,7 @@
     <string name="revenue_lbl">Revenue</string>
     <string name="synopsis_lbl">Synopsis</string>
     <string name="images_lbl">Images</string>
+    <string name="details_lbl">Details</string>
 
     <!-- Details Dummy Text -->
     <string name="dummy_movie_name">The Awesome Movie Name</string>

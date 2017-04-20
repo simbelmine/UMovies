@@ -32,8 +32,8 @@
     <dimen name="txt_large_size">20sp</dimen>
     <dimen name="txt_regular_size">18sp</dimen>
 
-    <dimen name="tumbnail_h">150dp</dimen>
-    <dimen name="tumbnail_w">100dp</dimen>
+    <dimen name="tumbnail_w">120dp</dimen>
+    <dimen name="tumbnail_h">170dp</dimen>
 
     <dimen name="star_size">25dp</dimen>
     <dimen name="star_padding">5dp</dimen>

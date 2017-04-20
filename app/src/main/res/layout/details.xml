@@ -1,32 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_color"
-    android:id="@+id/ll_container">
-    <ImageView
-        android:id="@+id/iv_blur_img"
+    android:background="@color/dark_background"
+    android:id="@+id/ll_container"
+    >
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/dark_background"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5">
+            <ImageView
+                android:id="@+id/iv_blur_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+    </LinearLayout>
+
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent_bg_overlay" />
-    <ScrollView
-        android:fillViewport="true"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical">
-        <LinearLayout
+        android:orientation="vertical"
+        android:weightSum="2">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
             android:layout_marginLeft="@dimen/standard_margin"
-            android:layout_marginBottom="@dimen/standard_margin"
-            android:paddingBottom="@dimen/layout_padding_top">
+            android:layout_marginRight="@dimen/standard_margin">
+            <RelativeLayout
+                android:id="@+id/tumbnail_container"
+                android:layout_width="@dimen/tumbnail_w"
+                android:layout_height="@dimen/tumbnail_h"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="32dp"
+                android:layout_marginRight="@dimen/standard_margin">
+                <ImageView
+                    android:id="@+id/iv_tumbnail_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/movie_placeholder"
+                    android:layout_centerInParent="true"
+                    />
+                <View
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/round_bg"/>
+                <ImageView
+                    android:id="@+id/iv_play_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@mipmap/play_circle_outline"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/tv_movie_name"
                 android:layout_width="match_parent"
@@ -35,62 +83,97 @@
                 android:textSize="@dimen/txt_title_size"
                 android:layout_marginTop="@dimen/area_margin_top"
                 tools:text="@string/dummy_movie_name"
+                android:layout_toRightOf="@id/tumbnail_container"
+                android:layout_centerVertical="true"
                 />
             <include layout="@layout/details_stars"/>
-            <include layout="@layout/details_additional_info"/>
-            <include layout="@layout/details_revenue"/>
-            <include layout="@layout/details_genres"/>
+        </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_movie_tagline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/txt_regular_size"
-                android:textColor="@color/main_text_color"
-                android:layout_marginTop="@dimen/tagline_margin_top"
-                tools:text="@string/dummy_movie_tagline"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_weight="1.3"
+            android:background="@color/dark_background">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/area_margin_top"
-                android:text="@string/synopsis_lbl"
-                android:textColor="@color/main_text_color"
-                android:textSize="@dimen/txt_large_size"
-                android:textStyle="bold" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/separator_height"
-                android:background="@color/main_text_color"/>
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/standard_margin"
+                android:layout_marginLeft="@dimen/standard_margin"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/layout_padding_top">
 
-            <TextView
-                android:id="@+id/tv_movie_synopsis"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_margin"
-                android:textSize="@dimen/txt_regular_size"
-                android:textColor="@color/main_text_color"
-                tools:text="@string/dummy_movie_synopsis"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    android:text="@string/details_lbl"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_large_size"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/area_margin_top"
-                android:text="@string/images_lbl"
-                android:textColor="@color/main_text_color"
-                android:textSize="@dimen/txt_large_size"
-                android:textStyle="bold" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/separator_height"
-                android:background="@color/main_text_color"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/separator_height"
+                    android:background="@color/main_text_color" />
 
-            <ImageView
-                android:id="@+id/iv_tumbnail_img"
-                android:layout_width="@dimen/tumbnail_w"
-                android:layout_height="@dimen/tumbnail_h"
-                android:layout_marginTop="@dimen/standard_margin"
-                android:src="@mipmap/logo"/>
-        </LinearLayout>
-    </ScrollView>
+                <include layout="@layout/details_additional_info" />
+
+                <include layout="@layout/details_revenue" />
+
+                <include layout="@layout/details_genres" />
+
+                <TextView
+                    android:id="@+id/tv_movie_tagline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tagline_margin_top"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_regular_size"
+                    tools:text="@string/dummy_movie_tagline" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/area_margin_top"
+                    android:text="@string/synopsis_lbl"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_large_size"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/separator_height"
+                    android:background="@color/main_text_color" />
+
+                <TextView
+                    android:id="@+id/tv_movie_synopsis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_regular_size"
+                    tools:text="@string/dummy_movie_synopsis" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/area_margin_top"
+                    android:text="@string/images_lbl"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_large_size"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/separator_height"
+                    android:background="@color/main_text_color" />
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
 </FrameLayout>
