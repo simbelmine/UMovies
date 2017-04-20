@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -103,6 +104,7 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
             Movie movie = bundle.getParcelable(MoviesFragment.MOVIE_OBJ);
             if(movie != null) {
                 this.movie = movie;
+                Log.v(MainActivity.TAG, "id = " + movie.getId());
             }
             else {
                 this.movie = null;

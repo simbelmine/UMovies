@@ -2,6 +2,7 @@
 <resources>
     <dimen name="standard_padding">16dp</dimen>
     <dimen name="standard_margin">16dp</dimen>
+    <dimen name="double_standard_margin">32dp</dimen>
 
     <!-- Main Activity posters -->
     <dimen name="poster_txt_lr_padding">6dp</dimen>
@@ -37,4 +38,8 @@
 
     <dimen name="star_size">25dp</dimen>
     <dimen name="star_padding">5dp</dimen>
+
+    <dimen name="play_outline_size">45dp</dimen>
+    <dimen name="play_size">50dp</dimen>
+    <dimen name="scroll_view_margin_lr">12dp</dimen>
 </resources>

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">UMovies</string>
-
+    
     <string name="API_KEY"></string>
     <string name="DATA_SINGLE_MOVIE_URL">http://api.themoviedb.org/3/movie/</string>
     <string name="DATA_BASE_URL">http://api.themoviedb.org/3/movie/</string>
@@ -20,7 +20,7 @@
     <string name="runtime_lbl">Runtime</string>
     <string name="revenue_lbl">Revenue</string>
     <string name="synopsis_lbl">Synopsis</string>
-    <string name="images_lbl">Images</string>
+    <string name="reviews_lbl">Reviews</string>
     <string name="details_lbl">Details</string>
 
     <!-- Details Dummy Text -->
