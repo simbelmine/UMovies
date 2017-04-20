@@ -10,6 +10,7 @@
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="actionOverflowMenuStyle">@style/MyApp.PopupMenu</item>
         <item name="android:itemTextAppearance">@style/itemTextStyle.AppTheme</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="MyApp.PopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">

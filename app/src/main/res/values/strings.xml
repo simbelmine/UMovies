@@ -40,5 +40,14 @@
         <item>Favorites</item>
     </string-array>
 
+    <!-- Settings -->
     <string name="action_settings">Settings</string>
+    <string name="popular">Popular Movies</string>
+    <string name="top_rated">Top Rated Movies</string>
+    <string name="favorites">Favorites Movies</string>
+    <string name="popular_key">popular_movies_key</string>
+    <string name="top_rated_key">top_rated_key</string>
+    <string name="favorites_key">favorites_key</string>
+    <string name="hidden">Hidden</string>
+    <string name="shown">Shown</string>
 </resources>

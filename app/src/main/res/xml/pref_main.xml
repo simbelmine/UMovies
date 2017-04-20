@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/popular_key"
+        android:summaryOff="@string/hidden"
+        android:summaryOn="@string/shown"
+        android:title="@string/popular"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/top_rated_key"
+        android:summaryOff="@string/hidden"
+        android:summaryOn="@string/shown"
+        android:title="@string/top_rated"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/favorites_key"
+        android:summaryOff="@string/hidden"
+        android:summaryOn="@string/shown"
+        android:title="@string/favorites"/>
+</PreferenceScreen>
