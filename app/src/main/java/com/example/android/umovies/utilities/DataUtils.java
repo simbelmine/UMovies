@@ -17,13 +17,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -31,24 +28,35 @@ import okhttp3.Response;
 
 public final class DataUtils {
 
-    public static URL getDBUrl(Context context, int fragmentPosition, String id) {
+    public static URL getDBUrl(Context context, int fragmentPosition, String[] singleMoviePath) {
         String baseUrl = context.getResources().getString(R.string.DATA_BASE_URL);
         String apiKey = context.getResources().getString(R.string.API_KEY);
         String queryStr = context.getResources().getString(R.string.QUERY_STR);
         URL url = null;
+        Uri uri;
 
-        String paramToAdd;
-        if(id == null) {
-            paramToAdd = getUrlExtension(context, fragmentPosition);
+        if(singleMoviePath == null || singleMoviePath.length == 0) {
+            String paramToAdd = getUrlExtension(context, fragmentPosition);
+            uri = Uri.parse(baseUrl).buildUpon()
+                    .appendPath(paramToAdd)
+                    .appendQueryParameter(queryStr, apiKey)
+                    .build();
         }
         else {
-            paramToAdd = id;
+            if(singleMoviePath.length > 1) {
+                uri = Uri.parse(baseUrl).buildUpon()
+                        .appendPath(singleMoviePath[0])
+                        .appendPath(singleMoviePath[1])
+                        .appendQueryParameter(queryStr, apiKey)
+                        .build();
+            }
+            else {
+                uri = Uri.parse(baseUrl).buildUpon()
+                        .appendPath(singleMoviePath[0])
+                        .appendQueryParameter(queryStr, apiKey)
+                        .build();
+            }
         }
-
-        Uri uri = Uri.parse(baseUrl).buildUpon()
-                .appendPath(paramToAdd)
-                .appendQueryParameter(queryStr, apiKey)
-                .build();
 
         try {
             url = new URL(uri.toString());
@@ -172,6 +180,47 @@ public final class DataUtils {
                 .tagline(tagline)
                 .revenue(revenue)
                 .genres(genresList)
+                .build();
+
+        return newMovie;
+    }
+
+    public static Movie getMovieReviewData(Movie movie, String jsonStr) throws JSONException {
+        final String REVIEWS = "results";
+        final String AUTHOR = "author";
+        final String CONTENT = "content";
+        final String RATING = "rating";
+        Movie newMovie;
+
+            JSONObject movieJson = new JSONObject(jsonStr);
+            JSONArray reviewsInfoArray = movieJson.getJSONArray(REVIEWS);
+
+            List<String> authors = new ArrayList<>();
+            List<String> contents = new ArrayList<>();
+            List<String> ratings = new ArrayList<>();
+
+            for (int i = 0; i < reviewsInfoArray.length(); i++) {
+                JSONObject currJson = (JSONObject) reviewsInfoArray.get(i);
+
+                String author = currJson.getString(AUTHOR);
+                String content = currJson.getString(CONTENT);
+                String rating ;
+                try {
+                   rating =  currJson.getString(RATING);
+                }
+                catch (JSONException ex) {
+                    rating = "";
+                }
+
+                authors.add(author);
+                contents.add(content);
+                ratings.add(rating);
+            }
+
+        newMovie = new Movie.MovieBuilder(movie.getId(), movie.getTitle(), movie.getImageURL())
+                .reviewAuthor(authors)
+                .reviewContent(contents)
+                .reviewRating(ratings)
                 .build();
 
         return newMovie;

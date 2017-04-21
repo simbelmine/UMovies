@@ -21,6 +21,9 @@ public class Movie implements Parcelable {
     private final String runtime;       // optional
     private final String revenue;       // optional
     private final List<String> genres;  // optional
+    private final List<String> reviewAuthor;  // optional
+    private final List<String> reviewContent; // optional
+    private final List<String> reviewRating;  // optional
 
     private Movie(MovieBuilder builder) {
         this.id = builder.id;
@@ -34,6 +37,9 @@ public class Movie implements Parcelable {
         this.runtime = builder.runtime;
         this.revenue = builder.revenue;
         this.genres = builder.genres;
+        this.reviewAuthor = builder.reviewAuthor;
+        this.reviewContent = builder.reviewContent;
+        this.reviewRating = builder.reviewRating;
     }
 
     private Movie(Parcel in){
@@ -48,6 +54,9 @@ public class Movie implements Parcelable {
         this.runtime = in.readString();
         this.revenue = in.readString();
         this.genres = new ArrayList<>();
+        this.reviewAuthor = new ArrayList<>();
+        this.reviewContent = new ArrayList<>();
+        this.reviewRating = new ArrayList<>();
     }
 
     @Override
@@ -68,6 +77,9 @@ public class Movie implements Parcelable {
         dest.writeString(runtime);
         dest.writeString(revenue);
         dest.writeStringList(genres);
+        dest.writeStringList(reviewAuthor);
+        dest.writeStringList(reviewContent);
+        dest.writeStringList(reviewRating);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -124,6 +136,18 @@ public class Movie implements Parcelable {
         return genres;
     }
 
+    public List<String> getReviewAuthor() {
+        return reviewAuthor;
+    }
+
+    public List<String> getReviewContent() {
+        return reviewContent;
+    }
+
+    public List<String> getReviewRating() {
+        return reviewRating;
+    }
+
     public static class MovieBuilder {
         private final String id;
         private final String title;
@@ -136,6 +160,9 @@ public class Movie implements Parcelable {
         private String runtime;
         private String revenue;
         private List<String> genres;
+        private List<String> reviewAuthor;
+        private List<String> reviewContent;
+        private List<String> reviewRating;
 
         public MovieBuilder(String id, String title, String imageURL) {
             this.id = id;
@@ -180,6 +207,18 @@ public class Movie implements Parcelable {
         
         public MovieBuilder genres(List<String> genres) {
             this.genres = genres;
+            return this;
+        }
+        public MovieBuilder reviewAuthor(List<String> reviewAuthor) {
+            this.reviewAuthor = reviewAuthor;
+            return this;
+        }
+        public MovieBuilder reviewContent(List<String> reviewContent) {
+            this.reviewContent = reviewContent;
+            return this;
+        }
+        public MovieBuilder reviewRating(List<String> reviewRating) {
+            this.reviewRating = reviewRating;
             return this;
         }
 

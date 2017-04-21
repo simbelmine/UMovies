@@ -1,0 +1,68 @@
+package com.example.android.umovies;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.content.AsyncTaskLoader;
+
+import com.example.android.umovies.utilities.DataUtils;
+
+import java.net.URL;
+
+class FetchMovieReviewsTaskLoader extends AsyncTaskLoader<Movie> {
+    private Context context;
+    private Movie movie;
+    private String path;
+    private Bundle args;
+
+
+    public FetchMovieReviewsTaskLoader(Context context, Bundle args) {
+        super(context);
+        this.context = context;
+        this.args = args;
+    }
+
+    @Override
+    protected void onStartLoading() {
+        if (args == null) {
+            return;
+        }
+
+        path = args.getString("path");
+        movie = args.getParcelable("movie");
+
+        if (movie != null) {
+            deliverResult(movie);
+        } else {
+            forceLoad();
+        }
+
+        forceLoad();
+    }
+
+    @Override
+    public Movie loadInBackground() {
+        String[] arr = path.split("/");
+
+        URL url = DataUtils.getDBUrl(context, -1, arr);
+        if (url == null) {
+            return null;
+        }
+
+        try {
+            String response = DataUtils.getResponseFromHTTP(context, url);
+            movie = DataUtils.getMovieReviewData(movie, response);
+
+            return movie;
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void deliverResult(Movie data) {
+        movie = data;
+        super.deliverResult(data);
+    }
+}

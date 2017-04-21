@@ -3,8 +3,11 @@ package com.example.android.umovies;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,9 +23,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailsActivity extends AppCompatActivity implements FetchSingleMovieTaskCompleteListener<Movie> {
+public class DetailsActivity extends AppCompatActivity implements
+        FetchSingleMovieTaskCompleteListener<Movie>,
+        LoaderManager.LoaderCallbacks<Movie> {
     private static final int BLUR_RADIUS = 25;
     private static final int TOTAL_COUNT_RATING_STARS = 5;
+    private static final String MOVIE_REVIEW_LOADER_ID = "ReviewsLoaderId";
     @BindView(R.id.ll_container) FrameLayout movieContainer;
     @BindView(R.id.iv_blur_img) ImageView blurImage;
     @BindView(R.id.iv_tumbnail_img) ImageView movieImage;
@@ -35,8 +41,11 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
     @BindView(R.id.tv_movie_revenue) TextView revenueView;
     @BindView(R.id.tv_movie_tagline) TextView taglineView;
     @BindView(R.id.tv_movie_genres) TextView genresView;
+    @BindView(R.id.ll_movie_reviews) LinearLayout reviewsView;
     private Movie movie;
     private int moviePos;
+    private LoaderManager loaderManager;
+    private int loaderId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,9 +54,12 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
         ButterKnife.bind(this);
 
         initView();
+        initLoader();
+        getSavedInstanceStates(savedInstanceState);
         getFromExtras();
         populateData(movie);
         populateFromNetwork();
+        fetchData(movie.getId()+ "/reviews");
     }
 
     private void populateData(Movie movie) {
@@ -249,4 +261,107 @@ public class DetailsActivity extends AppCompatActivity implements FetchSingleMov
         return false;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(MOVIE_REVIEW_LOADER_ID, loaderId);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void getSavedInstanceStates(Bundle savedInstanceState) {
+        updateLoaderId(savedInstanceState);
+    }
+
+    private void updateLoaderId(Bundle savedInstanceState) {
+        if(savedInstanceState != null && savedInstanceState.containsKey(MOVIE_REVIEW_LOADER_ID)) {
+            loaderId = savedInstanceState.getInt(MOVIE_REVIEW_LOADER_ID);
+        }
+        else {
+            int id = getIntBundleExtra(MOVIE_REVIEW_LOADER_ID);
+            loaderId = id;
+        }
+    }
+
+    private int getIntBundleExtra(String extraName) {
+        Bundle bundle = getIntent().getExtras();
+        return bundle.getInt(extraName);
+    }
+
+    private void initLoader() {
+        loaderManager = getSupportLoaderManager();
+        loaderManager.initLoader(loaderId, null, this);
+    }
+
+    private void fetchData(String path) {
+        loadFetchedMovieReviews(path);
+    }
+
+    private void loadFetchedMovieReviews(String path) {
+        Bundle bundle = new Bundle();
+        bundle.putString("path", path);
+        bundle.putParcelable("movie", movie);
+
+        Loader<Movie> loader = getLoader();
+        if(loader == null) {
+            loaderManager.initLoader(loaderId, bundle, this);
+        }
+        else {
+            loaderManager.restartLoader(loaderId, bundle, this);
+        }
+    }
+
+    private Loader<Movie> getLoader() {
+        return loaderManager.getLoader(loaderId);
+    }
+
+    @Override
+    public Loader<Movie> onCreateLoader(int id, Bundle args) {
+        return new FetchMovieReviewsTaskLoader(this, args);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Movie> loader, Movie movie) {
+        int size = movie.getReviewAuthor().size();
+        int i = 0;
+        if(size == 0) {
+            TextView tv = createTextView("", false);
+            reviewsView.addView(tv);
+        }
+        else {
+            while (i < size) {
+                String author = movie.getReviewAuthor().get(i);
+                String content = movie.getReviewContent().get(i);
+                String rating = movie.getReviewRating().get(i);
+
+                TextView tv = createTextView(author, true);
+                reviewsView.addView(tv);
+
+                TextView tv1 = createTextView(content + "\n" + rating, false);
+                reviewsView.addView(tv1);
+
+                i++;
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Movie> loader) {
+    }
+
+    private TextView createTextView(String text, boolean isTitle) {
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(lparams);
+        if(isTitle) {
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.txt_large_size));
+            tv.setTextColor(getResources().getColor(R.color.secondary_color));
+        }
+        else {
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.txt_regular_size));
+            tv.setTextColor(getResources().getColor(R.color.main_text_color));
+        }
+        tv.setText(text);
+
+        return tv;
+    }
 }

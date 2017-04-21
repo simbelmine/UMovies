@@ -182,13 +182,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/separator_height"
                     android:background="@color/main_text_color" />
-                <TextView
-                    android:id="@+id/tv_movie_reviews"
+                <LinearLayout
+                    android:id="@+id/ll_movie_reviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/standard_margin"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/txt_regular_size"/>
+                    android:orientation="vertical"
+                    />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

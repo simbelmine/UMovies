@@ -12,7 +12,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,7 +129,7 @@ public class MoviesFragment extends Fragment  implements
     private void fetchData(int fragmentPosition) {
         if(moviesList == null || moviesList.size() == 0) {
             if (DataUtils.isOnline(context)) {
-                loadFetchingMovies(fragmentPosition);
+                loadFetchedMovies(fragmentPosition);
                 moviesRView.setVisibility(View.VISIBLE);
                 noMoviesMessage.setVisibility(View.INVISIBLE);
             } else {
@@ -142,7 +141,7 @@ public class MoviesFragment extends Fragment  implements
         }
     }
 
-    private void loadFetchingMovies(int fragmentPosition) {
+    private void loadFetchedMovies(int fragmentPosition) {
         Bundle bundle = new Bundle();
         bundle.putInt(FRAGMENT_POSITION, fragmentPosition);
 
