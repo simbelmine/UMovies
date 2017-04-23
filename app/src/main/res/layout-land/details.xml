@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background"
+    android:id="@+id/ll_container"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_background"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8">
+            <ImageView
+                android:id="@+id/iv_blur_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_bg_overlay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginRight="@dimen/standard_margin">
+            <RelativeLayout
+                android:id="@+id/tumbnail_container"
+                android:layout_width="@dimen/tumbnail_w"
+                android:layout_height="@dimen/tumbnail_h"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/double_standard_margin"
+                android:layout_marginLeft="@dimen/standard_margin">
+                <ImageView
+                    android:id="@+id/iv_tumbnail_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/movie_placeholder"
+                    android:layout_centerInParent="true"
+                    />
+                <View
+                    android:layout_width="@dimen/play_outline_size"
+                    android:layout_height="@dimen/play_outline_size"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/round_bg"/>
+                <ImageView
+                    android:id="@+id/iv_play_icon"
+                    android:layout_width="@dimen/play_size"
+                    android:layout_height="@dimen/play_size"
+                    android:src="@mipmap/play_circle_outline"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_movie_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/txt_title_size"
+                android:layout_marginTop="@dimen/standard_margin"
+                tools:text="@string/dummy_movie_name"
+                android:layout_below="@id/tumbnail_container"
+                android:layout_marginLeft="@dimen/standard_margin"
+                />
+            <include layout="@layout/details_stars"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_outline"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/double_standard_margin"
+                android:visibility="visible"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/double_standard_margin"
+                android:visibility="invisible"/>
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/scroll_view_margin_lr"
+            android:layout_marginRight="@dimen/scroll_view_margin_lr"
+            android:layout_weight="1.3"
+            android:background="@color/dark_background"
+            android:paddingRight="@dimen/padding_from_nav_bar">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/standard_margin"
+                android:layout_marginLeft="@dimen/standard_margin"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/layout_padding_top">
+                <!-- DETAILS -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    android:text="@string/details_lbl"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_large_size"
+                    android:textStyle="bold" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/separator_height"
+                    android:background="@color/main_text_color" />
+
+                <include layout="@layout/details_additional_info" />
+                <include layout="@layout/details_revenue" />
+                <include layout="@layout/details_genres" />
+
+                <!-- TAGLINE -->
+                <TextView
+                    android:id="@+id/tv_movie_tagline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tagline_margin_top"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_regular_size"
+                    tools:text="@string/dummy_movie_tagline" />
+
+                <!-- SYNOPSIS -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/area_margin_top"
+                    android:text="@string/synopsis_lbl"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_large_size"
+                    android:textStyle="bold" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/separator_height"
+                    android:background="@color/main_text_color" />
+                <TextView
+                    android:id="@+id/tv_movie_synopsis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_regular_size"
+                    tools:text="@string/dummy_movie_synopsis" />
+
+                <!-- REVIEWS -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/area_margin_top"
+                    android:text="@string/reviews_lbl"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/txt_large_size"
+                    android:textStyle="bold" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/separator_height"
+                    android:background="@color/main_text_color" />
+                <LinearLayout
+                    android:id="@+id/ll_movie_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    android:orientation="vertical"
+                    />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>
