@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class MoviesFragment extends Fragment  implements
     public static final String MOVIE_OBJ = "MovieObj";
     public static final String MOVIE_POS = "MoviePosition";
     private static final String MOVIES_LIST_OBJ = "MoviesListObj";
-    public static String FRAGMENT_POSITION = "FRAGMENT_POSITION";
+    public static String FRAGMENT_POSITION = "fragmentPosition";
     private static final String MOVIES_LOADER_ID = "LoaderId";
     @BindView(R.id.cl_main_container) FrameLayout mainContainer;
     @BindView(R.id.srl_movies_swipe_container) SwipeRefreshLayout swipeRefreshLayout;
@@ -215,10 +216,12 @@ public class MoviesFragment extends Fragment  implements
     public void onItemClick(int position) {
         Movie currMovie;
         Intent intent = new Intent(context, DetailsActivity.class);
+
         if(moviesList != null) {
             currMovie = moviesList.get(position);
             intent.putExtra(MOVIE_OBJ, currMovie);
             intent.putExtra(MOVIE_POS, position);
+            intent.putExtra(FRAGMENT_POSITION, fragmentPosition);
         }
 
         startActivity(intent);

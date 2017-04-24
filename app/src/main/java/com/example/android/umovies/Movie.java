@@ -53,10 +53,10 @@ public class Movie implements Parcelable {
         this.tagline = in.readString();
         this.runtime = in.readString();
         this.revenue = in.readString();
-        this.genres = new ArrayList<>();
-        this.reviewAuthor = new ArrayList<>();
-        this.reviewContent = new ArrayList<>();
-        this.reviewRating = new ArrayList<>();
+        this.genres = in.readArrayList(null);
+        this.reviewAuthor = in.readArrayList(null);
+        this.reviewContent = in.readArrayList(null);
+        this.reviewRating = in.readArrayList(null);
     }
 
     @Override
@@ -76,10 +76,10 @@ public class Movie implements Parcelable {
         dest.writeString(tagline);
         dest.writeString(runtime);
         dest.writeString(revenue);
-        dest.writeStringList(genres);
-        dest.writeStringList(reviewAuthor);
-        dest.writeStringList(reviewContent);
-        dest.writeStringList(reviewRating);
+        dest.writeList(genres);
+        dest.writeList(reviewAuthor);
+        dest.writeList(reviewContent);
+        dest.writeList(reviewRating);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

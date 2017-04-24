@@ -1,16 +1,23 @@
 package com.example.android.umovies.utilities;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.android.umovies.MainActivity;
 import com.example.android.umovies.Movie;
 import com.example.android.umovies.R;
+import com.example.android.umovies.data.FavoriteMoviesContract;
+import com.example.android.umovies.data.FavoriteMoviesDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +27,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -268,5 +276,93 @@ public final class DataUtils {
     public static void updateMovie(Movie newMovie, int pos) {
         newMovie.setIsFullyUpdated(true);
         movieListGlobal.set(pos, newMovie);
+    }
+
+
+    private static SQLiteDatabase favoriteMoviesDB;
+    public static void initFavoriteMoviesReadableDB(Context context) {
+        FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(context);
+        favoriteMoviesDB = dbHelper.getReadableDatabase();
+    }
+
+    public static long insertToDb(Context context, ContentValues cv) {
+        FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(context);
+        favoriteMoviesDB = dbHelper.getWritableDatabase();
+        return favoriteMoviesDB.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
+    }
+
+    public static List<Movie> getFavoriteMoviesListFromSQLite() {
+        List<Movie> movieList = new ArrayList<>();
+        Cursor cursor = getFavoriteMovies();
+
+        if(cursor != null) {
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()) {
+                Movie currMovie = getMovieFromCursor(cursor);
+                movieList.add(currMovie);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+
+        return movieList;
+    }
+
+    private static Movie getMovieFromCursor(Cursor cursor) {
+        String movieId = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID));
+        String movieName = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_NAME));
+        String movieImgUrl = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_IMG_URL));
+        String movieSynopsis = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_SYNOPSIS));
+        String movieReleaseDate = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE));
+        String movieRating = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING));
+        String movieVotes = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_VOTES));
+        String movieTagline = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TAGLINE));
+        String movieRuntime = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RUNTIME));
+        String movieRevenue = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVENUE));
+        String movieGenres = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_GENRES));
+        String movieReviewAuthors = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS));
+        String movieReviewContents = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS));
+        String movieReviewRatings = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS));
+
+
+        List<String> listGenres = getListFromString(movieGenres);
+        List<String> listReviewAuthors = getListFromString(movieReviewAuthors);
+        List<String> listReviewContents = getListFromString(movieReviewContents);
+        List<String> listReviewRatings = getListFromString(movieReviewRatings);
+
+
+        return new Movie.MovieBuilder(movieId, movieName, movieImgUrl)
+                .synopsis(movieSynopsis)
+                .releaseDate(movieReleaseDate)
+                .rating(movieRating)
+                .votes(movieVotes)
+                .tagline(movieTagline)
+                .runtime(movieRuntime)
+                .revenue(movieRevenue)
+                .genres(listGenres)
+                .reviewAuthor(listReviewAuthors)
+                .reviewContent(listReviewContents)
+                .reviewRating(listReviewRatings)
+                .build();
+    }
+
+    public static final String MOVIE_DATA_SEPARATOR = "##";
+    private static List<String> getListFromString(String str) {
+        String[] genres = str.split(MOVIE_DATA_SEPARATOR);
+
+        List<String> list = Arrays.asList(genres);
+        return new ArrayList<>(list);
+    }
+
+    private static Cursor getFavoriteMovies() {
+        return favoriteMoviesDB.query(
+                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TIMESTAMP
+        );
     }
 }

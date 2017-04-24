@@ -1,4 +1,4 @@
-package com.example.android.umovies.Transformations;
+package com.example.android.umovies.transformations;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

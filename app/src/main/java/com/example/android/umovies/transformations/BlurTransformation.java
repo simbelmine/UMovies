@@ -1,4 +1,4 @@
-package com.example.android.umovies.Transformations;
+package com.example.android.umovies.transformations;
 
 import android.annotation.TargetApi;
 import android.content.Context;

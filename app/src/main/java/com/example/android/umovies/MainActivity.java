@@ -13,7 +13,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.android.umovies.Transformations.ZoomOutPageTransformer;
+import com.example.android.umovies.transformations.ZoomOutPageTransformer;
+import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.WindowUtils;
 
 import java.util.ArrayList;
@@ -40,11 +41,11 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         ButterKnife.bind(this);
         getMainSharedPrefs();
 
+        DataUtils.initFavoriteMoviesReadableDB(this);
         initViewPager();
         setupTabLayout();
         setViewPagerCachedTabs();
         setViewPagerTransformation();
-
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.android.umovies;
 
+import android.content.ContentValues;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,12 +9,14 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.android.umovies.Transformations.BlurTransformation;
+import com.example.android.umovies.data.FavoriteMoviesContract;
+import com.example.android.umovies.transformations.BlurTransformation;
 import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.ImageUtils;
 import com.squareup.picasso.Picasso;
@@ -25,10 +28,13 @@ import butterknife.ButterKnife;
 
 public class DetailsActivity extends AppCompatActivity implements
         FetchSingleMovieTaskCompleteListener<Movie>,
-        LoaderManager.LoaderCallbacks<Movie> {
+        LoaderManager.LoaderCallbacks<Movie>,
+        View.OnClickListener {
     private static final int BLUR_RADIUS = 25;
     private static final int TOTAL_COUNT_RATING_STARS = 5;
     private static final String MOVIE_REVIEW_LOADER_ID = "ReviewsLoaderId";
+    private static final String GENRES_SEPARATOR = "    ";
+    private static final String RATING_SEPARATOR = "/";
     @BindView(R.id.ll_container) FrameLayout movieContainer;
     @BindView(R.id.iv_blur_img) ImageView blurImage;
     @BindView(R.id.iv_tumbnail_img) ImageView movieImage;
@@ -42,10 +48,13 @@ public class DetailsActivity extends AppCompatActivity implements
     @BindView(R.id.tv_movie_tagline) TextView taglineView;
     @BindView(R.id.tv_movie_genres) TextView genresView;
     @BindView(R.id.ll_movie_reviews) LinearLayout reviewsView;
+    @BindView(R.id.iv_favorite_off) ImageView btnFavoriteOff;
+    @BindView(R.id.iv_favorite_on) ImageView btnFavoriteOn;
     private Movie movie;
     private int moviePos;
     private LoaderManager loaderManager;
     private int loaderId;
+    private int fragmentPosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,9 +66,15 @@ public class DetailsActivity extends AppCompatActivity implements
         initLoader();
         getSavedInstanceStates(savedInstanceState);
         getFromExtras();
-        populateData(movie);
-        populateFromNetwork();
-        fetchData(movie.getId()+ "/reviews");
+        if(fragmentPosition != -1) {
+            if (fragmentPosition == 2) {
+                populateDataOffline(movie);
+            } else {
+                populateData(movie);
+                populateFromNetwork();
+                fetchReviewData(movie.getId() + "/reviews");
+            }
+        }
     }
 
     private void populateData(Movie movie) {
@@ -73,7 +88,8 @@ public class DetailsActivity extends AppCompatActivity implements
                     .fit()
                     .into(movieImage);
             titleView.setText(movie.getTitle());
-            votesView.setText("(" + movie.getVotes() + " votes)");
+            String votesStr = (fragmentPosition != -1 && fragmentPosition == 2) ? movie.getVotes() : "(" + movie.getVotes() + " votes)";
+            votesView.setText(votesStr);
             setRatingStars(movie.getRating());
             ratingView.setText(getRating(movie.getRating()));
             releaseDateView.setText(movie.getReleaseDate());
@@ -116,13 +132,13 @@ public class DetailsActivity extends AppCompatActivity implements
             Movie movie = bundle.getParcelable(MoviesFragment.MOVIE_OBJ);
             if(movie != null) {
                 this.movie = movie;
-                Log.v(MainActivity.TAG, "id = " + movie.getId());
             }
             else {
                 this.movie = null;
             }
 
             moviePos = bundle.getInt(MoviesFragment.MOVIE_POS, -1);
+            fragmentPosition = bundle.getInt(MoviesFragment.FRAGMENT_POSITION, -1);
         }
     }
 
@@ -130,6 +146,9 @@ public class DetailsActivity extends AppCompatActivity implements
         if(Build.VERSION.SDK_INT >= 21) {
             movieContainer.setPadding(0, (int)getResources().getDimension(R.dimen.padding_from_top_toolbar), 0, 0);
         }
+
+        btnFavoriteOff.setOnClickListener(this);
+        btnFavoriteOn.setOnClickListener(this);
     }
 
     @Override
@@ -189,10 +208,23 @@ public class DetailsActivity extends AppCompatActivity implements
         StringBuilder genresStr = new StringBuilder();
 
         for(String g : genres) {
-            genresStr.append(g + "    ");
+            genresStr.append(g + GENRES_SEPARATOR);
         }
 
         return genresStr.toString();
+    }
+
+    private String getGenresForDB(String genres) {
+        String[] arrGenres = genres.split(GENRES_SEPARATOR);
+        StringBuilder strBuilder = new StringBuilder();
+        for(int i = 0; i < arrGenres.length; i++) {
+            strBuilder.append(arrGenres[i]);
+            if(i < arrGenres.length-1){
+                strBuilder.append(DataUtils.MOVIE_DATA_SEPARATOR);
+            }
+        }
+
+        return strBuilder.toString();
     }
 
     private String getRating(String rating) {
@@ -207,7 +239,12 @@ public class DetailsActivity extends AppCompatActivity implements
             ratingStr = String.valueOf(result);
         }
 
-        return ratingStr + "/" + TOTAL_COUNT_RATING_STARS;
+        return ratingStr + RATING_SEPARATOR + TOTAL_COUNT_RATING_STARS;
+    }
+
+    private String getRatingForDB(String rating) {
+        String[] arrRating = rating.split(RATING_SEPARATOR);
+        return arrRating[0];
     }
 
     private void setRatingStars(String rating) {
@@ -291,7 +328,7 @@ public class DetailsActivity extends AppCompatActivity implements
         loaderManager.initLoader(loaderId, null, this);
     }
 
-    private void fetchData(String path) {
+    private void fetchReviewData(String path) {
         loadFetchedMovieReviews(path);
     }
 
@@ -320,31 +357,43 @@ public class DetailsActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie movie) {
-        int size = movie.getReviewAuthor().size();
-        int i = 0;
-        if(size == 0) {
-            TextView tv = createTextView("", false);
-            reviewsView.addView(tv);
-        }
-        else {
-            while (i < size) {
-                String author = movie.getReviewAuthor().get(i);
-                String content = movie.getReviewContent().get(i);
-                String rating = movie.getReviewRating().get(i);
-
-                TextView tv = createTextView(author, true);
-                reviewsView.addView(tv);
-
-                TextView tv1 = createTextView(content + "\n" + rating, false);
-                reviewsView.addView(tv1);
-
-                i++;
-            }
-        }
+        addReviews(movie);
     }
 
     @Override
     public void onLoaderReset(Loader<Movie> loader) {
+    }
+
+    private void addReviews(Movie movie) {
+        List<String> reviewAuthors = movie.getReviewAuthor();
+        if(reviewAuthors == null || reviewAuthors.size() == 0) {
+            TextView tv = createTextView("", false);
+            reviewsView.addView(tv);
+            return;
+        }
+        int size = reviewAuthors.size();
+        int i = 0;
+
+        while (i < size) {
+            String author = movie.getReviewAuthor().get(i);
+            String content = movie.getReviewContent().get(i);
+            String rating = movie.getReviewRating().get(i);
+
+            createReview(author, content, rating);
+
+            i++;
+        }
+    }
+
+    private void createReview(String author, String content, String rating) {
+        TextView tvAuthor = createTextView(author, true);
+        reviewsView.addView(tvAuthor);
+
+        TextView tvContent = createTextView(content, false);
+        reviewsView.addView(tvContent);
+
+        TextView tvRating = createTextView(rating, false);
+        reviewsView.addView(tvRating);
     }
 
     private TextView createTextView(String text, boolean isTitle) {
@@ -363,5 +412,58 @@ public class DetailsActivity extends AppCompatActivity implements
         tv.setText(text);
 
         return tv;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_favorite_off:
+                // Set Favorites to ON and save to DB
+                if(addToFavorites() != -1) {
+                    btnFavoriteOff.setVisibility(View.INVISIBLE);
+                    btnFavoriteOn.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.iv_favorite_on:
+
+                break;
+        }
+    }
+
+    private long addToFavorites() {
+        ContentValues cv = new ContentValues();
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_NAME, movie.getTitle());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_IMG_URL, movie.getImageURL());
+
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_SYNOPSIS, synopsisView.getText().toString());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, releaseDateView.getText().toString());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING, getRatingForDB(ratingView.getText().toString()));
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_VOTES, votesView.getText().toString());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TAGLINE, taglineView.getText().toString());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RUNTIME, runtimeView.getText().toString());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVENUE, revenueView.getText().toString());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_GENRES, getGenresForDB(genresView.getText().toString()));
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS, getReviewDetails(1));
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS, getReviewDetails(2));
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS, getReviewDetails(3));
+
+        return DataUtils.insertToDb(this, cv);
+    }
+
+    private String getReviewDetails(int position) {
+        if(reviewsView.getChildAt(position) instanceof TextView) {
+            return ((TextView) reviewsView.getChildAt(position)).getText().toString();
+        }
+        return "";
+    }
+
+    private void populateDataOffline(Movie movie) {
+        populateData(movie);
+        runtimeView.setText(movie.getRuntime());
+        revenueView.setText(movie.getRevenue());
+        taglineView.setText(movie.getTagline());
+        genresView.setText(getGenres(movie.getGenres()));
+        addReviews(movie);
     }
 }

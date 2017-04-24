@@ -13,6 +13,7 @@ import java.util.List;
 
 
 public class FetchMovieTaskLoader extends AsyncTaskLoader<List<Movie>> {
+    private static final int FAVORITES_POSITION = 2; // Three Tabs from 0 to 2. Last one is Favorites
     private Context context;
     private List<Movie> moviesList;
     private int fragmentPosition;
@@ -41,20 +42,26 @@ public class FetchMovieTaskLoader extends AsyncTaskLoader<List<Movie>> {
 
     @Override
     public List<Movie> loadInBackground() {
-        URL url = DataUtils.getDBUrl(context, fragmentPosition, null);
-        if (url == null) {
-            return null;
-        }
-
-        try {
-            String response = DataUtils.getResponseFromHTTP(context, url);
-            moviesList = DataUtils.getMovieListDataFromJson(response);
+        if(fragmentPosition == FAVORITES_POSITION) {
+            moviesList = DataUtils.getFavoriteMoviesListFromSQLite();
 
             return moviesList;
         }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
+        else {
+            URL url = DataUtils.getDBUrl(context, fragmentPosition, null);
+            if (url == null) {
+                return null;
+            }
+
+            try {
+                String response = DataUtils.getResponseFromHTTP(context, url);
+                moviesList = DataUtils.getMovieListDataFromJson(response);
+
+                return moviesList;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return null;
+            }
         }
     }
 
