@@ -38,6 +38,7 @@ public class MoviesFragment extends Fragment  implements
     public static final String MOVIE_POS = "MoviePosition";
     private static final String MOVIES_LIST_OBJ = "MoviesListObj";
     public static String FRAGMENT_POSITION = "fragmentPosition";
+    public static int FAVORITES_FRAGMENT_POSITION = 2;
     private static final String MOVIES_LOADER_ID = "LoaderId";
     @BindView(R.id.cl_main_container) FrameLayout mainContainer;
     @BindView(R.id.srl_movies_swipe_container) SwipeRefreshLayout swipeRefreshLayout;
@@ -129,7 +130,7 @@ public class MoviesFragment extends Fragment  implements
 
     private void fetchData(int fragmentPosition) {
         if(moviesList == null || moviesList.size() == 0) {
-            if (DataUtils.isOnline(context)) {
+            if (DataUtils.isOnline(context) || fragmentPosition == FAVORITES_FRAGMENT_POSITION) {
                 loadFetchedMovies(fragmentPosition);
                 moviesRView.setVisibility(View.VISIBLE);
                 noMoviesMessage.setVisibility(View.INVISIBLE);

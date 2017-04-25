@@ -294,7 +294,9 @@ public final class DataUtils {
         return favoriteMoviesDB.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
     }
 
-    public static List<Movie> getFavoriteMoviesListFromSQLite() {
+    public static List<Movie> getFavoriteMoviesListFromSQLite(Context context) {
+        DataUtils.initFavoriteMoviesReadableDB(context);
+
         List<Movie> movieList = new ArrayList<>();
         Cursor cursor = getFavoriteMovies();
 

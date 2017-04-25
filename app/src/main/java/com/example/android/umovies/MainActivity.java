@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         ButterKnife.bind(this);
         getMainSharedPrefs();
 
-        DataUtils.initFavoriteMoviesReadableDB(this);
         initViewPager();
         setupTabLayout();
         setViewPagerCachedTabs();
