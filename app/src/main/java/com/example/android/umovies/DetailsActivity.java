@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,10 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.umovies.data.FavoriteMoviesContract;
-import com.example.android.umovies.transformations.BlurTransformation;
 import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.ImageUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -30,14 +27,10 @@ public class DetailsActivity extends AppCompatActivity implements
         FetchSingleMovieTaskCompleteListener<Movie>,
         LoaderManager.LoaderCallbacks<Movie>,
         View.OnClickListener {
-    private static final int BLUR_RADIUS = 25;
-    private static final int TOTAL_COUNT_RATING_STARS = 5;
     private static final String MOVIE_REVIEW_LOADER_ID = "ReviewsLoaderId";
-    private static final String GENRES_SEPARATOR = "    ";
-    private static final String RATING_SEPARATOR = "/";
     @BindView(R.id.ll_container) FrameLayout movieContainer;
-    @BindView(R.id.iv_blur_img) ImageView blurImage;
-    @BindView(R.id.iv_tumbnail_img) ImageView movieImage;
+    @BindView(R.id.iv_blur_img) ImageView blurImageView;
+    @BindView(R.id.iv_tumbnail_img) ImageView movieImageView;
     @BindView(R.id.tv_rating) TextView ratingView;
     @BindView(R.id.tv_movie_name) TextView titleView;
     @BindView(R.id.tv_movie_release_date) TextView releaseDateView;
@@ -83,23 +76,20 @@ public class DetailsActivity extends AppCompatActivity implements
             String fullUrl = ImageUtils.getImageUrl(imgUrl);
 
             loadBlurBgImage(fullUrl);
-            Picasso.with(this)
-                    .load(fullUrl)
-                    .fit()
-                    .into(movieImage);
+            ImageUtils.loadImageWithPicasso(this, fullUrl, movieImageView, false);
             titleView.setText(movie.getTitle());
             String votesStr = (fragmentPosition != -1 && fragmentPosition == 2) ? movie.getVotes() : "(" + movie.getVotes() + " votes)";
             votesView.setText(votesStr);
             setRatingStars(movie.getRating());
-            ratingView.setText(getRating(movie.getRating()));
+            ratingView.setText(DataUtils.getRating(movie.getRating()));
             releaseDateView.setText(movie.getReleaseDate());
             synopsisView.setText(movie.getSynopsis());
 
             if(movie.isFullyUpdated()) {
-                runtimeView.setText(getRuntime(movie.getRuntime()));
-                revenueView.setText(getRevenue(movie.getRevenue()));
+                runtimeView.setText(DataUtils.getRuntime(movie.getRuntime()));
+                revenueView.setText(DataUtils.getRevenue(movie.getRevenue()));
                 taglineView.setText(movie.getTagline());
-                genresView.setText(getGenres(movie.getGenres()));
+                genresView.setText(DataUtils.getGenres(movie.getGenres()));
             }
         }
     }
@@ -118,11 +108,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
     private void loadBlurBgImage(String fullUrl) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Picasso.with(this)
-                    .load(fullUrl)
-                    .fit()
-                    .transform(new BlurTransformation(this, BLUR_RADIUS))
-                    .into(blurImage);
+            ImageUtils.loadImageWithPicasso(this, fullUrl, blurImageView, true);
         }
     }
 
@@ -154,97 +140,12 @@ public class DetailsActivity extends AppCompatActivity implements
     @Override
     public void onTaskCompleted(Movie movie) {
         if(movie != null) {
-            runtimeView.setText(getRuntime(movie.getRuntime()));
-            revenueView.setText(getRevenue(movie.getRevenue()));
+            runtimeView.setText(DataUtils.getRuntime(movie.getRuntime()));
+            revenueView.setText(DataUtils.getRevenue(movie.getRevenue()));
             taglineView.setText(movie.getTagline());
-            genresView.setText(getGenres(movie.getGenres()));
+            genresView.setText(DataUtils.getGenres(movie.getGenres()));
             DataUtils.updateMovie(movie, moviePos);
         }
-    }
-
-    private String getRuntime(String original) {
-        int runtimeNum = Integer.valueOf(original);
-        int hours = Math.round(runtimeNum/60);
-        int minutes = runtimeNum - (hours*60);
-
-        return hours + " hr. " + minutes + " min.";
-    }
-
-    private String getRevenue(String original) {
-        int billion = 1000000000;
-        int million = 1000000;
-        int thousand = 1000;
-        int revenueAmount = Integer.valueOf(original);
-        double result;
-        String postfix;
-
-        if(revenueAmount/billion > 0) {
-            result = revenueAmount/(double)billion;
-            postfix = "B";
-        }
-        else if(revenueAmount/million > 0) {
-            result = revenueAmount/(double)million;
-            postfix = "M";
-        }
-        else if(revenueAmount/thousand > 0) {
-            result = revenueAmount/(double)thousand;
-            postfix = "k";
-        }
-        else {
-            result = revenueAmount;
-            postfix = "";
-        }
-
-        result = (double)Math.round(result * 10d) / 10d;
-
-        if(isZeroAfterFloatingPoint(result)){
-            return "$" + (int)result + postfix;
-        }
-
-        return "$" + result + postfix;
-    }
-
-    private String getGenres(List<String> genres) {
-        StringBuilder genresStr = new StringBuilder();
-
-        for(String g : genres) {
-            genresStr.append(g + GENRES_SEPARATOR);
-        }
-
-        return genresStr.toString();
-    }
-
-    private String getGenresForDB(String genres) {
-        String[] arrGenres = genres.split(GENRES_SEPARATOR);
-        StringBuilder strBuilder = new StringBuilder();
-        for(int i = 0; i < arrGenres.length; i++) {
-            strBuilder.append(arrGenres[i]);
-            if(i < arrGenres.length-1){
-                strBuilder.append(DataUtils.MOVIE_DATA_SEPARATOR);
-            }
-        }
-
-        return strBuilder.toString();
-    }
-
-    private String getRating(String rating) {
-        double ratingVal = Double.valueOf(rating);
-        double result = (double)Math.round((ratingVal/2) * 10d) / 10d;
-        String ratingStr;
-
-        if(isZeroAfterFloatingPoint(result)) {
-            ratingStr = String.valueOf((int) result);
-        }
-        else {
-            ratingStr = String.valueOf(result);
-        }
-
-        return ratingStr + RATING_SEPARATOR + TOTAL_COUNT_RATING_STARS;
-    }
-
-    private String getRatingForDB(String rating) {
-        String[] arrRating = rating.split(RATING_SEPARATOR);
-        return arrRating[0];
     }
 
     private void setRatingStars(String rating) {
@@ -254,7 +155,7 @@ public class DetailsActivity extends AppCompatActivity implements
     }
 
     private void inflateRatingStars(double ratingStarsCount) {
-        int total = TOTAL_COUNT_RATING_STARS;
+        int total = DataUtils.TOTAL_COUNT_RATING_STARS;
         LinearLayout ratingStarsContainer = (LinearLayout) findViewById(R.id.ll_stars_container);
         int fullStarsCount = ((int)ratingStarsCount)/2;
 
@@ -288,15 +189,6 @@ public class DetailsActivity extends AppCompatActivity implements
         container.addView(imageView);
     }
 
-    private boolean isZeroAfterFloatingPoint(double val) {
-        double res = val - Math.floor(val);
-        res = (res%1.0)*10;
-
-        if(res == 0)
-            return true;
-
-        return false;
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -438,12 +330,12 @@ public class DetailsActivity extends AppCompatActivity implements
 
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_SYNOPSIS, synopsisView.getText().toString());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, releaseDateView.getText().toString());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING, getRatingForDB(ratingView.getText().toString()));
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING, DataUtils.getRatingForDB(ratingView.getText().toString()));
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_VOTES, votesView.getText().toString());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TAGLINE, taglineView.getText().toString());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RUNTIME, runtimeView.getText().toString());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVENUE, revenueView.getText().toString());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_GENRES, getGenresForDB(genresView.getText().toString()));
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_GENRES, DataUtils.getGenresForDB(genresView.getText().toString()));
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS, getReviewDetails(1));
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS, getReviewDetails(2));
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS, getReviewDetails(3));
@@ -463,7 +355,7 @@ public class DetailsActivity extends AppCompatActivity implements
         runtimeView.setText(movie.getRuntime());
         revenueView.setText(movie.getRevenue());
         taglineView.setText(movie.getTagline());
-        genresView.setText(getGenres(movie.getGenres()));
+        genresView.setText(DataUtils.getGenres(movie.getGenres()));
         addReviews(movie);
     }
 }

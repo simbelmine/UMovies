@@ -9,11 +9,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.android.umovies.MainActivity;
 import com.example.android.umovies.Movie;
 import com.example.android.umovies.R;
 import com.example.android.umovies.data.FavoriteMoviesContract;
@@ -35,6 +33,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public final class DataUtils {
+    private static final int  RESPONSE_LOWER_LIMIT = 200;
+    private static final int  RESPONSE_UPPER_LIMIT = 300;
+    private static final String GENRES_SEPARATOR = "    ";
+    private static final String RATING_SEPARATOR = "/";
+    public static final int TOTAL_COUNT_RATING_STARS = 5;
 
     public static URL getDBUrl(Context context, int fragmentPosition, String[] singleMoviePath) {
         String baseUrl = context.getResources().getString(R.string.DATA_BASE_URL);
@@ -90,8 +93,7 @@ public final class DataUtils {
         }
     }
 
-    private static final int  RESPONSE_LOWER_LIMIT = 200;
-    private static final int  RESPONSE_UPPER_LIMIT = 300;
+
     public static String getResponseFromHTTP(final Context context, URL url) {
         // Test URL : url = new URL("http://www.google.com:81");
         String resultJsonStr = null;
@@ -364,5 +366,100 @@ public final class DataUtils {
                 null,
                 FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TIMESTAMP
         );
+    }
+
+    public static String getRuntime(String originalStr) {
+        int runtimeNum = Integer.valueOf(originalStr);
+        int hours = Math.round(runtimeNum/60);
+        int minutes = runtimeNum - (hours*60);
+
+        return hours + " hr. " + minutes + " min.";
+    }
+
+    public static String getRevenue(String original) {
+        int billion = 1000000000;
+        int million = 1000000;
+        int thousand = 1000;
+        int revenueAmount = Integer.valueOf(original);
+        double result;
+        String postfix;
+
+        if(revenueAmount/billion > 0) {
+            result = revenueAmount/(double)billion;
+            postfix = "B";
+        }
+        else if(revenueAmount/million > 0) {
+            result = revenueAmount/(double)million;
+            postfix = "M";
+        }
+        else if(revenueAmount/thousand > 0) {
+            result = revenueAmount/(double)thousand;
+            postfix = "k";
+        }
+        else {
+            result = revenueAmount;
+            postfix = "";
+        }
+
+        result = (double)Math.round(result * 10d) / 10d;
+
+        if(isZeroAfterFloatingPoint(result)){
+            return "$" + (int)result + postfix;
+        }
+
+        return "$" + result + postfix;
+    }
+
+    private static boolean isZeroAfterFloatingPoint(double val) {
+        double res = val - Math.floor(val);
+        res = (res%1.0)*10;
+
+        if(res == 0)
+            return true;
+
+        return false;
+    }
+
+    public static String getGenres(List<String> genres) {
+        StringBuilder genresStr = new StringBuilder();
+
+        for(String g : genres) {
+            genresStr.append(g + GENRES_SEPARATOR);
+        }
+
+        return genresStr.toString();
+    }
+
+    public static String getGenresForDB(String genres) {
+        String[] arrGenres = genres.split(GENRES_SEPARATOR);
+        StringBuilder strBuilder = new StringBuilder();
+        for(int i = 0; i < arrGenres.length; i++) {
+            strBuilder.append(arrGenres[i]);
+            if(i < arrGenres.length-1){
+                strBuilder.append(DataUtils.MOVIE_DATA_SEPARATOR);
+            }
+        }
+
+        return strBuilder.toString();
+    }
+
+    public static String getRating(String rating) {
+        double ratingVal = Double.valueOf(rating);
+        double result = (double)Math.round((ratingVal/2) * 10d) / 10d;
+        String ratingStr;
+
+        if(isZeroAfterFloatingPoint(result)) {
+            ratingStr = String.valueOf((int) result);
+        }
+        else {
+            ratingStr = String.valueOf(result);
+        }
+
+        return ratingStr + RATING_SEPARATOR + TOTAL_COUNT_RATING_STARS;
+    }
+
+    public static String getRatingForDB(String rating) {
+        String[] arrRating = rating.split(RATING_SEPARATOR);
+        return arrRating[0];
     }
 }
