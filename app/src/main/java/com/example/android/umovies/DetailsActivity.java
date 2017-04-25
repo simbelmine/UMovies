@@ -59,6 +59,7 @@ public class DetailsActivity extends AppCompatActivity implements
         initLoader();
         getSavedInstanceStates(savedInstanceState);
         getFromExtras();
+        setFavoriteStar();
         if(fragmentPosition != -1) {
             if (fragmentPosition == 2) {
                 populateDataOffline(movie);
@@ -357,5 +358,18 @@ public class DetailsActivity extends AppCompatActivity implements
         taglineView.setText(movie.getTagline());
         genresView.setText(DataUtils.getGenres(movie.getGenres()));
         addReviews(movie);
+    }
+
+    private void setFavoriteStar() {
+        if(movie != null) {
+            if(DataUtils.isMovieInDB(this, movie.getId())){
+                btnFavoriteOff.setVisibility(View.INVISIBLE);
+                btnFavoriteOn.setVisibility(View.VISIBLE);
+            }
+            else {
+                btnFavoriteOff.setVisibility(View.VISIBLE);
+                btnFavoriteOn.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 }

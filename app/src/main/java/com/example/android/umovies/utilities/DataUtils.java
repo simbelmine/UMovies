@@ -37,6 +37,7 @@ public final class DataUtils {
     private static final int  RESPONSE_UPPER_LIMIT = 300;
     private static final String GENRES_SEPARATOR = "    ";
     private static final String RATING_SEPARATOR = "/";
+    public static final String MOVIE_DATA_SEPARATOR = "##";
     public static final int TOTAL_COUNT_RATING_STARS = 5;
 
     public static URL getDBUrl(Context context, int fragmentPosition, String[] singleMoviePath) {
@@ -306,6 +307,7 @@ public final class DataUtils {
             }
         }
         cursor.close();
+        favoriteMoviesDB.close();
 
         return movieList;
     }
@@ -348,7 +350,25 @@ public final class DataUtils {
                 .build();
     }
 
-    public static final String MOVIE_DATA_SEPARATOR = "##";
+    public static boolean isMovieInDB(Context context, String movieID) {
+        initFavoriteMoviesReadableDB(context);
+        String queryStr = "SELECT * FROM " +
+                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME +
+                " WHERE " + FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID +
+                " = " + movieID;
+
+        Cursor cursor = favoriteMoviesDB.rawQuery(queryStr, null);
+        if(cursor.getCount() <= 0) {
+            cursor.close();
+            favoriteMoviesDB.close();
+            return false;
+        }
+
+        cursor.close();
+        favoriteMoviesDB.close();
+        return true;
+    }
+
     private static List<String> getListFromString(String str) {
         String[] genres = str.split(MOVIE_DATA_SEPARATOR);
 
