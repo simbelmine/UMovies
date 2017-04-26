@@ -291,7 +291,20 @@ public final class DataUtils {
     public static long insertToDb(Context context, ContentValues cv) {
         FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(context);
         favoriteMoviesDB = dbHelper.getWritableDatabase();
-        return favoriteMoviesDB.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
+        long res = favoriteMoviesDB.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
+        favoriteMoviesDB.close();
+
+        return res;
+    }
+
+    public static int deleteFromDb(Context context, String id) {
+        FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(context);
+        favoriteMoviesDB = dbHelper.getWritableDatabase();
+        int res = favoriteMoviesDB.delete(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
+                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID + " = " + id, null);
+        favoriteMoviesDB.close();
+
+        return res;
     }
 
     public static List<Movie> getFavoriteMoviesListFromSQLite(Context context) {

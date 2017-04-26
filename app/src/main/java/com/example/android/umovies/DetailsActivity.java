@@ -319,7 +319,7 @@ public class DetailsActivity extends AppCompatActivity implements
                 /**
                  * Favorites ON; Save to DB
                  */
-                if(addToFavorites() != -1) {
+                if(addToFavorites()) {
                     isFavoritesUpdated = true;
                     btnFavoriteOff.setVisibility(View.INVISIBLE);
                     btnFavoriteOn.setVisibility(View.VISIBLE);
@@ -329,13 +329,17 @@ public class DetailsActivity extends AppCompatActivity implements
                 /**
                  * Favorites ON; Delete from DB
                  */
-                isFavoritesUpdated = true;
+                if(deleteFromFavorites()) {
+                    isFavoritesUpdated = true;
+                    btnFavoriteOff.setVisibility(View.VISIBLE);
+                    btnFavoriteOn.setVisibility(View.INVISIBLE);
+                }
 
                 break;
         }
     }
 
-    private long addToFavorites() {
+    private boolean addToFavorites() {
         ContentValues cv = new ContentValues();
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_NAME, movie.getTitle());
@@ -353,7 +357,17 @@ public class DetailsActivity extends AppCompatActivity implements
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS, getReviewDetails(2));
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS, getReviewDetails(3));
 
-        return DataUtils.insertToDb(this, cv);
+        if(DataUtils.insertToDb(this, cv) != -1) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean deleteFromFavorites() {
+        if(DataUtils.deleteFromDb(this, movie.getId()) > 0) {
+            return true;
+        }
+        return false;
     }
 
     private String getReviewDetails(int position) {
