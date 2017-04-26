@@ -1,6 +1,8 @@
 package com.example.android.umovies;
 
 import android.content.ContentValues;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +30,7 @@ public class DetailsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Movie>,
         View.OnClickListener {
     private static final String MOVIE_REVIEW_LOADER_ID = "ReviewsLoaderId";
+    public static final String ADD_TO_FAVORITES_ACTION ="AddToFavoritesAction";
     @BindView(R.id.ll_container) FrameLayout movieContainer;
     @BindView(R.id.iv_blur_img) ImageView blurImageView;
     @BindView(R.id.iv_tumbnail_img) ImageView movieImageView;
@@ -48,12 +51,14 @@ public class DetailsActivity extends AppCompatActivity implements
     private LoaderManager loaderManager;
     private int loaderId;
     private int fragmentPosition;
+    private boolean isFavoritesUpdated;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details);
         ButterKnife.bind(this);
+        isFavoritesUpdated = false;
 
         initView();
         initLoader();
@@ -311,13 +316,20 @@ public class DetailsActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_favorite_off:
-                // Set Favorites to ON and save to DB
+                /**
+                 * Favorites ON; Save to DB
+                 */
                 if(addToFavorites() != -1) {
+                    isFavoritesUpdated = true;
                     btnFavoriteOff.setVisibility(View.INVISIBLE);
                     btnFavoriteOn.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.iv_favorite_on:
+                /**
+                 * Favorites ON; Delete from DB
+                 */
+                isFavoritesUpdated = true;
 
                 break;
         }
@@ -370,6 +382,17 @@ public class DetailsActivity extends AppCompatActivity implements
                 btnFavoriteOff.setVisibility(View.VISIBLE);
                 btnFavoriteOn.setVisibility(View.INVISIBLE);
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if(isFavoritesUpdated) {
+            Intent intentToReturn = new Intent(this, MainActivity.class);
+            intentToReturn.setData(Uri.parse(ADD_TO_FAVORITES_ACTION));
+            startActivity(intentToReturn);
         }
     }
 }

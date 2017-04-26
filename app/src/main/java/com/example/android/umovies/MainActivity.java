@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.android.umovies.transformations.ZoomOutPageTransformer;
-import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.WindowUtils;
 
 import java.util.ArrayList;
@@ -144,5 +143,13 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     private void startSettingsActivity() {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivity(settingsIntent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(DetailsActivity.ADD_TO_FAVORITES_ACTION.equals(intent.getDataString())) {
+            viewPager.setAdapter(adapter);
+        }
     }
 }
