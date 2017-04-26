@@ -150,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         super.onNewIntent(intent);
         if(DetailsActivity.ADD_TO_FAVORITES_ACTION.equals(intent.getDataString())) {
             viewPager.setAdapter(adapter);
+            if(intent.hasExtra(MoviesFragment.FRAGMENT_POSITION)) {
+                viewPager.setCurrentItem(intent.getIntExtra(MoviesFragment.FRAGMENT_POSITION, MoviesFragment.FAVORITES_FRAGMENT_POSITION));
+            }
         }
     }
 }

@@ -406,6 +406,7 @@ public class DetailsActivity extends AppCompatActivity implements
         if(isFavoritesUpdated) {
             Intent intentToReturn = new Intent(this, MainActivity.class);
             intentToReturn.setData(Uri.parse(ADD_TO_FAVORITES_ACTION));
+            intentToReturn.putExtra(MoviesFragment.FRAGMENT_POSITION, fragmentPosition);
             startActivity(intentToReturn);
         }
     }
