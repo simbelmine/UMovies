@@ -13,14 +13,16 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersRVHolder> {
+    private ItemClickListener itemClickListener;
     private List<String> trailerKeys;
     private List<String> trailerNames;
     private Context context;
 
-    public TrailersAdapter(Context context, List<String> trailerKeys, List<String> trailerNames) {
+    public TrailersAdapter(Context context, List<String> trailerKeys, List<String> trailerNames, ItemClickListener itemClickListener) {
         this.context = context;
         this.trailerKeys = trailerKeys;
         this.trailerNames = trailerNames;
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersRVHolder> {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View movieView = inflater.inflate(R.layout.trailers_item, parent, false);
-        TrailersRVHolder viewHolder = new TrailersRVHolder(movieView);
+        TrailersRVHolder viewHolder = new TrailersRVHolder(movieView, itemClickListener);
 
         return viewHolder;
     }

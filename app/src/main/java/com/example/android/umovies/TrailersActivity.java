@@ -1,5 +1,8 @@
 package com.example.android.umovies;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +14,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TrailersActivity extends AppCompatActivity {
+public class TrailersActivity extends AppCompatActivity implements ItemClickListener {
     @BindView(R.id.rv_trailers) RecyclerView recyclerViewTrailers;
     private TrailersAdapter trailersAdapter;
     private List<String> trailerKeys;
@@ -51,7 +54,20 @@ public class TrailersActivity extends AppCompatActivity {
     }
 
     private void setRecyclerViewAdapter() {
-        trailersAdapter = new TrailersAdapter(this, trailerKeys, trailerNames);
+        trailersAdapter = new TrailersAdapter(this, trailerKeys, trailerNames, this);
         recyclerViewTrailers.setAdapter(trailersAdapter);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        String id = trailerKeys.get(position);
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + id));
+        try {
+            startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            startActivity(webIntent);
+        }
     }
 }
