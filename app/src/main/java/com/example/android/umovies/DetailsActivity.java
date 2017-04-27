@@ -429,6 +429,10 @@ public class DetailsActivity extends AppCompatActivity implements
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS, getReviewDetails(1));
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS, getReviewDetails(2));
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS, getReviewDetails(3));
+        String trailerKeysStr = DataUtils.getSeparatedStringFromList(trailerKeys);
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_KEYS, trailerKeysStr);
+        String trailerNamesStr =  DataUtils.getSeparatedStringFromList(trailerNames);
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_NAMES, trailerNamesStr);
 
         if(DataUtils.insertToDb(this, cv) != -1) {
             return true;
@@ -457,6 +461,8 @@ public class DetailsActivity extends AppCompatActivity implements
         taglineView.setText(movie.getTagline());
         genresView.setText(DataUtils.getGenres(movie.getGenres()));
         addReviews(movie);
+        trailerKeys = movie.getTrailerKeys();
+        trailerNames = movie.getTrailerNames();
     }
 
     private void setFavoriteStar() {

@@ -371,12 +371,15 @@ public final class DataUtils {
         String movieReviewAuthors = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS));
         String movieReviewContents = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS));
         String movieReviewRatings = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS));
-
+        String movieTrailerKeys = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_KEYS));
+        String movieTrailerNames = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_NAMES));
 
         List<String> listGenres = getListFromString(movieGenres);
         List<String> listReviewAuthors = getListFromString(movieReviewAuthors);
         List<String> listReviewContents = getListFromString(movieReviewContents);
         List<String> listReviewRatings = getListFromString(movieReviewRatings);
+        List<String> listTrailerKeys = getListFromString(movieTrailerKeys);
+        List<String> listTrailerNames = getListFromString(movieTrailerNames);
 
 
         return new Movie.MovieBuilder(movieId, movieName, movieImgUrl)
@@ -391,6 +394,8 @@ public final class DataUtils {
                 .reviewAuthor(listReviewAuthors)
                 .reviewContent(listReviewContents)
                 .reviewRating(listReviewRatings)
+                .trailerKeys(listTrailerKeys)
+                .trailerNames(listTrailerNames)
                 .build();
     }
 
@@ -418,6 +423,20 @@ public final class DataUtils {
 
         List<String> list = Arrays.asList(genres);
         return new ArrayList<>(list);
+    }
+
+    public static String getSeparatedStringFromList(List<String> list) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int size = list.size();
+
+        for(int i = 0; i < size; i++) {
+            stringBuilder.append(list.get(i));
+            if(i < size-1) {
+                stringBuilder.append(MOVIE_DATA_SEPARATOR);
+            }
+        }
+
+        return stringBuilder.toString();
     }
 
     private static Cursor getFavoriteMovies() {

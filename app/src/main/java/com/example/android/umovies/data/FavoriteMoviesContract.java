@@ -23,6 +23,8 @@ public class FavoriteMoviesContract {
         public static final String COLUMN_MOVIE_REVIEW_AUTHORS = "reviewAuthors";
         public static final String COLUMN_MOVIE_REVIEW_CONTENTS = "reviewContents";
         public static final String COLUMN_MOVIE_REVIEW_RATINGS = "reviewRatings";
+        public static final String COLUMN_MOVIE_TRAILER_KEYS = "trailerKeys";
+        public static final String COLUMN_MOVIE_TRAILER_NAMES = "trailerNames";
         public static final String COLUMN_MOVIE_TIMESTAMP = "timestamp";
     }
 }
