@@ -14,11 +14,13 @@ import java.util.List;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersRVHolder> {
     private List<String> trailerKeys;
+    private List<String> trailerNames;
     private Context context;
 
-    public TrailersAdapter(Context context, List<String> trailerKeys) {
+    public TrailersAdapter(Context context, List<String> trailerKeys, List<String> trailerNames) {
         this.context = context;
         this.trailerKeys = trailerKeys;
+        this.trailerNames = trailerNames;
     }
 
     @Override
@@ -33,7 +35,9 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersRVHolder> {
 
     @Override
     public void onBindViewHolder(final TrailersRVHolder holder, int position) {
-        holder.trailerName.setText(trailerKeys.get(position));
+        if(trailerNames.get(position) != null) {
+            holder.trailerName.setText(trailerNames.get(position));
+        }
 
         final String img_url="http://img.youtube.com/vi/"+ trailerKeys.get(position) +"/0.jpg";
         holder.trailerThumbnail.getViewTreeObserver()

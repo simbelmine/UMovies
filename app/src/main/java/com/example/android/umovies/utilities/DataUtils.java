@@ -240,7 +240,9 @@ public final class DataUtils {
     public static Movie getMovieTrailerKeys(Movie movie, String jsonStr) throws JSONException {
         final String RESULTS = "results";
         final String TRAILER_KEY = "key";
+        final String TRAILER_NAME = "name";
         List<String> keys = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         Movie newMovie;
 
         JSONObject movieJson = new JSONObject(jsonStr);
@@ -251,10 +253,14 @@ public final class DataUtils {
 
             String key = currJson.getString(TRAILER_KEY);
             keys.add(key);
+
+            String name = currJson.getString(TRAILER_NAME);
+            names.add(name);
         }
 
         newMovie = new Movie.MovieBuilder(movie.getId(), movie.getTitle(), movie.getImageURL())
-                .trailers(keys)
+                .trailerKeys(keys)
+                .trailerNames(names)
                 .build();
 
         return newMovie;

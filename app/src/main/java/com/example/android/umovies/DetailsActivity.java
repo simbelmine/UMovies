@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -59,6 +58,7 @@ public class DetailsActivity extends AppCompatActivity implements
     private int fragmentPosition;
     private boolean isFavoritesUpdated;
     private List<String> trailerKeys;
+    private List<String> trailerNames;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -310,8 +310,9 @@ public class DetailsActivity extends AppCompatActivity implements
             addReviews(movie);
         }
         if(loader.getId() == trailersLoaderId) {
-            updateMoviewWithTrailers(movie);
-            trailerKeys = movie.getTrailers();
+            updateMovieWithTrailers(movie);
+            trailerKeys = movie.getTrailerKeys();
+            trailerNames = movie.getTrailerNames();
         }
 
     }
@@ -328,9 +329,10 @@ public class DetailsActivity extends AppCompatActivity implements
         this.movie = movieBuilder.build();
     }
 
-    private void updateMoviewWithTrailers(Movie newMovie) {
+    private void updateMovieWithTrailers(Movie newMovie) {
         Movie.MovieBuilder movieBuilder = new Movie.MovieBuilder(this.movie);
-        movieBuilder.trailers(newMovie.getTrailers());
+        movieBuilder.trailerKeys(newMovie.getTrailerKeys());
+        movieBuilder.trailerNames(newMovie.getTrailerNames());
         this.movie = movieBuilder.build();
     }
 
@@ -476,8 +478,12 @@ public class DetailsActivity extends AppCompatActivity implements
     private void loadTrailersActivity() {
         Intent intent = new Intent(this, TrailersActivity.class);
         if(trailerKeys != null) {
-            List<String> trailers = new ArrayList<>(trailerKeys);
-            intent.putStringArrayListExtra("trailerKeys", (ArrayList<String>) trailers);
+            List<String> trailerKeys = new ArrayList<>(this.trailerKeys);
+            intent.putStringArrayListExtra("trailerKeys", (ArrayList<String>) trailerKeys);
+        }
+        if(trailerNames != null) {
+            List<String> trailersNames = new ArrayList<>(trailerNames);
+            intent.putStringArrayListExtra("trailerNames", (ArrayList<String>) trailersNames);
         }
         startActivity(intent);
     }

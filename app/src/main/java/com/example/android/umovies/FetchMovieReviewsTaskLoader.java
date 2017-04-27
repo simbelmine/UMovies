@@ -32,7 +32,7 @@ class FetchMovieReviewsTaskLoader extends AsyncTaskLoader<Movie> {
         movie = args.getParcelable("movie");
         loaderId = args.getString("loaderId");
 
-        if ((loaderId == DetailsActivity.MOVIE_TRAILERS_LOADER_ID && movie.getTrailers() != null) ||
+        if ((loaderId == DetailsActivity.MOVIE_TRAILERS_LOADER_ID && movie.getTrailerKeys() != null) ||
                 (loaderId == DetailsActivity.MOVIE_REVIEW_LOADER_ID && movie.getReviewAuthor() != null)) {
             deliverResult(movie);
         } else {

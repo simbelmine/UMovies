@@ -15,6 +15,7 @@ public class TrailersActivity extends AppCompatActivity {
     @BindView(R.id.rv_trailers) RecyclerView recyclerViewTrailers;
     private TrailersAdapter trailersAdapter;
     private List<String> trailerKeys;
+    private List<String> trailerNames;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,8 +37,11 @@ public class TrailersActivity extends AppCompatActivity {
 
     private void getFromExtras() {
         Bundle bundle = getIntent().getExtras();
-        if(bundle!= null && bundle.containsKey("trailerKeys")) {
+        if(bundle != null && bundle.containsKey("trailerKeys")) {
             trailerKeys = bundle.getStringArrayList("trailerKeys");
+        }
+        if(bundle != null && bundle.containsKey("trailerNames")) {
+            trailerNames = bundle.getStringArrayList("trailerNames");
         }
     }
 
@@ -47,7 +51,7 @@ public class TrailersActivity extends AppCompatActivity {
     }
 
     private void setRecyclerViewAdapter() {
-        trailersAdapter = new TrailersAdapter(this, trailerKeys);
+        trailersAdapter = new TrailersAdapter(this, trailerKeys, trailerNames);
         recyclerViewTrailers.setAdapter(trailersAdapter);
     }
 }

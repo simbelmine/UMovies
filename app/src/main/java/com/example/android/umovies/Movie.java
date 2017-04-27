@@ -2,7 +2,7 @@ package com.example.android.umovies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
@@ -24,7 +24,8 @@ public class Movie implements Parcelable {
     private final List<String> reviewAuthor;    // optional
     private final List<String> reviewContent;   // optional
     private final List<String> reviewRating;    // optional
-    private final List<String> trailers;        // optional
+    private final List<String> trailerKeys;     // optional
+    private final List<String> trailerNames;    // optional
 
     private Movie(MovieBuilder builder) {
         this.id = builder.id;
@@ -41,7 +42,8 @@ public class Movie implements Parcelable {
         this.reviewAuthor = builder.reviewAuthor;
         this.reviewContent = builder.reviewContent;
         this.reviewRating = builder.reviewRating;
-        this.trailers = builder.trailers;
+        this.trailerKeys = builder.trailerKeys;
+        this.trailerNames = builder.trailerNames;
     }
 
     private Movie(Parcel in){
@@ -59,7 +61,8 @@ public class Movie implements Parcelable {
         this.reviewAuthor = in.readArrayList(null);
         this.reviewContent = in.readArrayList(null);
         this.reviewRating = in.readArrayList(null);
-        this.trailers = in.readArrayList(null);
+        this.trailerKeys = in.readArrayList(null);
+        this.trailerNames = in.readArrayList(null);
     }
 
     @Override
@@ -83,7 +86,8 @@ public class Movie implements Parcelable {
         dest.writeList(reviewAuthor);
         dest.writeList(reviewContent);
         dest.writeList(reviewRating);
-        dest.writeList(trailers);
+        dest.writeList(trailerKeys);
+        dest.writeList(trailerNames);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -152,8 +156,12 @@ public class Movie implements Parcelable {
         return reviewRating;
     }
 
-    public List<String> getTrailers() {
-        return trailers;
+    public List<String> getTrailerKeys() {
+        return trailerKeys;
+    }
+
+    public List<String> getTrailerNames() {
+        return trailerNames;
     }
 
     public static class MovieBuilder {
@@ -171,7 +179,8 @@ public class Movie implements Parcelable {
         private List<String> reviewAuthor;
         private List<String> reviewContent;
         private List<String> reviewRating;
-        private List<String> trailers;
+        private List<String> trailerKeys;
+        private List<String> trailerNames;
 
         public MovieBuilder(String id, String title, String imageURL) {
             this.id = id;
@@ -248,8 +257,13 @@ public class Movie implements Parcelable {
             return this;
         }
 
-        public MovieBuilder trailers(List<String> trailers) {
-            this.trailers = trailers;
+        public MovieBuilder trailerKeys(List<String> trailerKeys) {
+            this.trailerKeys = trailerKeys;
+            return this;
+        }
+
+        public MovieBuilder trailerNames(List<String> trailerNames) {
+            this.trailerNames = trailerNames;
             return this;
         }
 
