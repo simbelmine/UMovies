@@ -15,6 +15,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TrailersActivity extends AppCompatActivity implements ItemClickListener {
+    private static final String YOUTUBE_APP_PATH = "vnd.youtube:";
+    private static final String YOUTUBE_WEB_PATH = "http://www.youtube.com/watch?v=";
     @BindView(R.id.rv_trailers) RecyclerView recyclerViewTrailers;
     private TrailersAdapter trailersAdapter;
     private List<String> trailerKeys;
@@ -40,11 +42,11 @@ public class TrailersActivity extends AppCompatActivity implements ItemClickList
 
     private void getFromExtras() {
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null && bundle.containsKey("trailerKeys")) {
-            trailerKeys = bundle.getStringArrayList("trailerKeys");
+        if(bundle != null && bundle.containsKey(DetailsActivity.TRAILER_KEYS_EXTRA)) {
+            trailerKeys = bundle.getStringArrayList(DetailsActivity.TRAILER_KEYS_EXTRA);
         }
-        if(bundle != null && bundle.containsKey("trailerNames")) {
-            trailerNames = bundle.getStringArrayList("trailerNames");
+        if(bundle != null && bundle.containsKey(DetailsActivity.TRAILER_NAMES_EXTRA)) {
+            trailerNames = bundle.getStringArrayList(DetailsActivity.TRAILER_NAMES_EXTRA);
         }
     }
 
@@ -61,9 +63,9 @@ public class TrailersActivity extends AppCompatActivity implements ItemClickList
     @Override
     public void onItemClick(int position) {
         String id = trailerKeys.get(position);
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_APP_PATH + id));
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://www.youtube.com/watch?v=" + id));
+                Uri.parse(YOUTUBE_WEB_PATH + id));
         try {
             startActivity(appIntent);
         } catch (ActivityNotFoundException ex) {

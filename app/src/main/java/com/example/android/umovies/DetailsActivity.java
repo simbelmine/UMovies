@@ -33,6 +33,11 @@ public class DetailsActivity extends AppCompatActivity implements
     public static final String MOVIE_REVIEW_LOADER_ID = "ReviewsLoaderId";
     public static final String MOVIE_TRAILERS_LOADER_ID = "TrailerKeysLoaderId";
     public static final String ADD_TO_FAVORITES_ACTION ="AddToFavoritesAction";
+    public static final String MOVIE_EXTRA = "MovieExtra";
+    public static final String PATH_EXTRA = "MovieDataPathExtra";
+    public static final String LOADER_ID_EXTRA = "LoaderIdExtra";
+    public static final String TRAILER_KEYS_EXTRA = "TrailerKeysExtra";
+    public static final String TRAILER_NAMES_EXTRA = "TrailerNamesExtra";
     @BindView(R.id.ll_container) FrameLayout movieContainer;
     @BindView(R.id.iv_blur_img) ImageView blurImageView;
     @BindView(R.id.iv_tumbnail_img) ImageView movieImageView;
@@ -84,18 +89,10 @@ public class DetailsActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-//        Log.v(MainActivity.TAG, "*** ON RESUME *** ");
-    }
-
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(MOVIE_REVIEW_LOADER_ID, reviewsLoaderId);
         outState.putInt(MOVIE_TRAILERS_LOADER_ID, trailersLoaderId);
-        outState.putParcelable("movie", movie);
+        outState.putParcelable(MOVIE_EXTRA, movie);
 
         super.onSaveInstanceState(outState);
     }
@@ -107,8 +104,8 @@ public class DetailsActivity extends AppCompatActivity implements
         if(loaderId != 0) trailersLoaderId = loaderId;
 
 
-        if(savedInstanceState != null && savedInstanceState.containsKey("movie")) {
-            movie = savedInstanceState.getParcelable("movie");
+        if(savedInstanceState != null && savedInstanceState.containsKey(MOVIE_EXTRA)) {
+            movie = savedInstanceState.getParcelable(MOVIE_EXTRA);
         }
         else {
             getFromExtras();
@@ -267,12 +264,12 @@ public class DetailsActivity extends AppCompatActivity implements
 
     private void loadFetchedDataFromPath(Movie movie, String path, int loaderId) {
         Bundle bundle = new Bundle();
-        bundle.putString("path", path);
-        bundle.putParcelable("movie", movie);
+        bundle.putString(PATH_EXTRA, path);
+        bundle.putParcelable(MOVIE_EXTRA, movie);
         String loaderIdStr = null;
         if(loaderId == reviewsLoaderId) loaderIdStr = MOVIE_REVIEW_LOADER_ID;
         else if(loaderId == trailersLoaderId) loaderIdStr = MOVIE_TRAILERS_LOADER_ID;
-        bundle.putString("loaderId", loaderIdStr);
+        bundle.putString(LOADER_ID_EXTRA, loaderIdStr);
         Loader<Movie> loader = getLoader(loaderId);
 
 
@@ -300,7 +297,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Movie> onCreateLoader(int id, Bundle args) {
-        return new FetchMovieReviewsTaskLoader(this, args);
+        return new FetchMovieExtraDataTaskLoader(this, args);
     }
 
     @Override
@@ -479,11 +476,11 @@ public class DetailsActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, TrailersActivity.class);
         if(trailerKeys != null) {
             List<String> trailerKeys = new ArrayList<>(this.trailerKeys);
-            intent.putStringArrayListExtra("trailerKeys", (ArrayList<String>) trailerKeys);
+            intent.putStringArrayListExtra(TRAILER_KEYS_EXTRA, (ArrayList<String>) trailerKeys);
         }
         if(trailerNames != null) {
             List<String> trailersNames = new ArrayList<>(trailerNames);
-            intent.putStringArrayListExtra("trailerNames", (ArrayList<String>) trailersNames);
+            intent.putStringArrayListExtra(TRAILER_NAMES_EXTRA, (ArrayList<String>) trailersNames);
         }
         startActivity(intent);
     }

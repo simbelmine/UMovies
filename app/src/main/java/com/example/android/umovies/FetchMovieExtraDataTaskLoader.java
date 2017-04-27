@@ -8,7 +8,7 @@ import com.example.android.umovies.utilities.DataUtils;
 
 import java.net.URL;
 
-class FetchMovieReviewsTaskLoader extends AsyncTaskLoader<Movie> {
+class FetchMovieExtraDataTaskLoader extends AsyncTaskLoader<Movie> {
     private Context context;
     private Movie movie;
     private String path;
@@ -16,7 +16,7 @@ class FetchMovieReviewsTaskLoader extends AsyncTaskLoader<Movie> {
     private Bundle args;
 
 
-    public FetchMovieReviewsTaskLoader(Context context, Bundle args) {
+    public FetchMovieExtraDataTaskLoader(Context context, Bundle args) {
         super(context);
         this.context = context;
         this.args = args;
@@ -28,9 +28,9 @@ class FetchMovieReviewsTaskLoader extends AsyncTaskLoader<Movie> {
             return;
         }
 
-        path = args.getString("path");
-        movie = args.getParcelable("movie");
-        loaderId = args.getString("loaderId");
+        path = args.getString(DetailsActivity.PATH_EXTRA);
+        movie = args.getParcelable(DetailsActivity.MOVIE_EXTRA);
+        loaderId = args.getString(DetailsActivity.LOADER_ID_EXTRA);
 
         if ((loaderId == DetailsActivity.MOVIE_TRAILERS_LOADER_ID && movie.getTrailerKeys() != null) ||
                 (loaderId == DetailsActivity.MOVIE_REVIEW_LOADER_ID && movie.getReviewAuthor() != null)) {

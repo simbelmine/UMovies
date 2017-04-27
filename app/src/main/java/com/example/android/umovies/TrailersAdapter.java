@@ -13,6 +13,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersRVHolder> {
+    private static final String YOUTUBE_THUMBNAIL_PREFIX_PATH = "http://img.youtube.com/vi/";
+    private static final String YOUTUBE_THUMBNAIL_POSTFIX_PATH = "/0.jpg";
     private ItemClickListener itemClickListener;
     private List<String> trailerKeys;
     private List<String> trailerNames;
@@ -41,7 +43,9 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersRVHolder> {
             holder.trailerName.setText(trailerNames.get(position));
         }
 
-        final String img_url="http://img.youtube.com/vi/"+ trailerKeys.get(position) +"/0.jpg";
+        final String img_url = YOUTUBE_THUMBNAIL_PREFIX_PATH +
+                trailerKeys.get(position) +
+                YOUTUBE_THUMBNAIL_POSTFIX_PATH;
         holder.trailerThumbnail.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
