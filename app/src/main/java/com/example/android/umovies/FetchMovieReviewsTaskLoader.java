@@ -12,6 +12,7 @@ class FetchMovieReviewsTaskLoader extends AsyncTaskLoader<Movie> {
     private Context context;
     private Movie movie;
     private String path;
+    private String loaderId;
     private Bundle args;
 
 
@@ -29,14 +30,14 @@ class FetchMovieReviewsTaskLoader extends AsyncTaskLoader<Movie> {
 
         path = args.getString("path");
         movie = args.getParcelable("movie");
+        loaderId = args.getString("loaderId");
 
-        if (movie != null) {
+        if ((loaderId == DetailsActivity.MOVIE_TRAILERS_LOADER_ID && movie.getTrailers() != null) ||
+                (loaderId == DetailsActivity.MOVIE_REVIEW_LOADER_ID && movie.getReviewAuthor() != null)) {
             deliverResult(movie);
         } else {
             forceLoad();
         }
-
-        forceLoad();
     }
 
     @Override
@@ -50,7 +51,12 @@ class FetchMovieReviewsTaskLoader extends AsyncTaskLoader<Movie> {
 
         try {
             String response = DataUtils.getResponseFromHTTP(context, url);
-            movie = DataUtils.getMovieReviewData(movie, response);
+            if(loaderId == DetailsActivity.MOVIE_REVIEW_LOADER_ID) {
+                movie = DataUtils.getMovieReviewData(movie, response);
+            }
+            else if(loaderId == DetailsActivity.MOVIE_TRAILERS_LOADER_ID) {
+                movie = DataUtils.getMovieTrailerKeys(movie, response);
+            }
 
             return movie;
         }

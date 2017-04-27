@@ -237,6 +237,29 @@ public final class DataUtils {
         return newMovie;
     }
 
+    public static Movie getMovieTrailerKeys(Movie movie, String jsonStr) throws JSONException {
+        final String RESULTS = "results";
+        final String TRAILER_KEY = "key";
+        List<String> keys = new ArrayList<>();
+        Movie newMovie;
+
+        JSONObject movieJson = new JSONObject(jsonStr);
+        JSONArray reviewsInfoArray = movieJson.getJSONArray(RESULTS);
+
+        for (int i = 0; i < reviewsInfoArray.length(); i++) {
+            JSONObject currJson = (JSONObject) reviewsInfoArray.get(i);
+
+            String key = currJson.getString(TRAILER_KEY);
+            keys.add(key);
+        }
+
+        newMovie = new Movie.MovieBuilder(movie.getId(), movie.getTitle(), movie.getImageURL())
+                .trailers(keys)
+                .build();
+
+        return newMovie;
+    }
+
     private static void populateGenres(JSONArray genresArray, List<String> genresList) throws JSONException {
         final String GENRE_NAME = "name";
 

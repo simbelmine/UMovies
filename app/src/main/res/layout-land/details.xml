@@ -88,17 +88,21 @@
                 />
             <include layout="@layout/details_stars"/>
             <ImageView
+                android:id="@+id/iv_favorite_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/star_outline"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/standard_margin"
                 android:layout_marginTop="@dimen/double_standard_margin"
                 android:visibility="visible"/>
             <ImageView
+                android:id="@+id/iv_favorite_on"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/star"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/standard_margin"
                 android:layout_marginTop="@dimen/double_standard_margin"
                 android:visibility="invisible"/>
         </RelativeLayout>

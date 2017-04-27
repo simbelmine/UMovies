@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -29,7 +30,8 @@ public class DetailsActivity extends AppCompatActivity implements
         FetchSingleMovieTaskCompleteListener<Movie>,
         LoaderManager.LoaderCallbacks<Movie>,
         View.OnClickListener {
-    private static final String MOVIE_REVIEW_LOADER_ID = "ReviewsLoaderId";
+    public static final String MOVIE_REVIEW_LOADER_ID = "ReviewsLoaderId";
+    public static final String MOVIE_TRAILERS_LOADER_ID = "TrailerKeysLoaderId";
     public static final String ADD_TO_FAVORITES_ACTION ="AddToFavoritesAction";
     @BindView(R.id.ll_container) FrameLayout movieContainer;
     @BindView(R.id.iv_blur_img) ImageView blurImageView;
@@ -46,10 +48,13 @@ public class DetailsActivity extends AppCompatActivity implements
     @BindView(R.id.ll_movie_reviews) LinearLayout reviewsView;
     @BindView(R.id.iv_favorite_off) ImageView btnFavoriteOff;
     @BindView(R.id.iv_favorite_on) ImageView btnFavoriteOn;
+    @BindView(R.id.iv_play_icon) ImageView btnPlayIcon;
     private Movie movie;
     private int moviePos;
-    private LoaderManager loaderManager;
-    private int loaderId;
+    private LoaderManager loaderReviewsManager;
+    private LoaderManager loaderTrailersManager;
+    private int reviewsLoaderId = 1;
+    private int trailersLoaderId = 2;
     private int fragmentPosition;
     private boolean isFavoritesUpdated;
 
@@ -61,9 +66,11 @@ public class DetailsActivity extends AppCompatActivity implements
         isFavoritesUpdated = false;
 
         initView();
-        initLoader();
+
+
+
+        initLoaders();
         getSavedInstanceStates(savedInstanceState);
-        getFromExtras();
         setFavoriteStar();
         if(fragmentPosition != -1) {
             if (fragmentPosition == 2) {
@@ -71,8 +78,48 @@ public class DetailsActivity extends AppCompatActivity implements
             } else {
                 populateData(movie);
                 populateFromNetwork();
-                fetchReviewData(movie.getId() + "/reviews");
+                fetchReviewData(movie, movie.getId() + "/reviews");
+                fetchTrailerKeys(movie, movie.getId() + "/videos");
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+//        Log.v(MainActivity.TAG, "*** ON RESUME *** ");
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(MOVIE_REVIEW_LOADER_ID, reviewsLoaderId);
+        outState.putInt(MOVIE_TRAILERS_LOADER_ID, trailersLoaderId);
+        outState.putParcelable("movie", movie);
+
+        Log.e(MainActivity.TAG, "SAVED Trailers --> " + movie.getTrailers());
+        Log.e(MainActivity.TAG, "SAVED Reviews --> " + movie.getReviewAuthor());
+
+        super.onSaveInstanceState(outState);
+    }
+
+    private void getSavedInstanceStates(Bundle savedInstanceState) {
+        int loaderId = getLoaderId(savedInstanceState, MOVIE_REVIEW_LOADER_ID);
+        if(loaderId != 0) reviewsLoaderId = loaderId;
+        loaderId = getLoaderId(savedInstanceState, MOVIE_TRAILERS_LOADER_ID);
+        if(loaderId != 0) trailersLoaderId = loaderId;
+
+
+        if(savedInstanceState != null && savedInstanceState.containsKey("movie")) {
+            movie = savedInstanceState.getParcelable("movie");
+            Log.e(MainActivity.TAG, "SIS Trailers --> " + movie.getTrailers());
+            Log.e(MainActivity.TAG, "SIS Reviews --> " + movie.getReviewAuthor());
+        }
+        else {
+            getFromExtras();
+            Log.e(MainActivity.TAG, "Bundle Trailers --> " + movie.getTrailers());
+            Log.e(MainActivity.TAG, "Bundle Reviews --> " + movie.getReviewAuthor());
         }
     }
 
@@ -141,6 +188,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
         btnFavoriteOff.setOnClickListener(this);
         btnFavoriteOn.setOnClickListener(this);
+        btnPlayIcon.setOnClickListener(this);
     }
 
     @Override
@@ -195,24 +243,12 @@ public class DetailsActivity extends AppCompatActivity implements
         container.addView(imageView);
     }
 
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(MOVIE_REVIEW_LOADER_ID, loaderId);
-        super.onSaveInstanceState(outState);
-    }
-
-    private void getSavedInstanceStates(Bundle savedInstanceState) {
-        updateLoaderId(savedInstanceState);
-    }
-
-    private void updateLoaderId(Bundle savedInstanceState) {
-        if(savedInstanceState != null && savedInstanceState.containsKey(MOVIE_REVIEW_LOADER_ID)) {
-            loaderId = savedInstanceState.getInt(MOVIE_REVIEW_LOADER_ID);
+    private int getLoaderId(Bundle savedInstanceState, String loaderId) {
+        if(savedInstanceState != null && savedInstanceState.containsKey(loaderId)) {
+            return savedInstanceState.getInt(loaderId);
         }
         else {
-            int id = getIntBundleExtra(MOVIE_REVIEW_LOADER_ID);
-            loaderId = id;
+            return getIntBundleExtra(loaderId);
         }
     }
 
@@ -221,31 +257,56 @@ public class DetailsActivity extends AppCompatActivity implements
         return bundle.getInt(extraName);
     }
 
-    private void initLoader() {
-        loaderManager = getSupportLoaderManager();
-        loaderManager.initLoader(loaderId, null, this);
+    private void initLoaders() {
+        loaderReviewsManager = getSupportLoaderManager();
+        loaderReviewsManager.initLoader(reviewsLoaderId, null, this);
+
+        loaderTrailersManager = getSupportLoaderManager();
+        loaderTrailersManager.initLoader(trailersLoaderId, null, this);
     }
 
-    private void fetchReviewData(String path) {
-        loadFetchedMovieReviews(path);
+    private void fetchReviewData(Movie movie, String path) {
+        loadFetchedDataFromPath(movie, path, reviewsLoaderId);
     }
 
-    private void loadFetchedMovieReviews(String path) {
+    private void fetchTrailerKeys(Movie movie, String path) {
+        loadFetchedDataFromPath(movie, path, trailersLoaderId);
+    }
+
+    private void loadFetchedDataFromPath(Movie movie, String path, int loaderId) {
         Bundle bundle = new Bundle();
         bundle.putString("path", path);
         bundle.putParcelable("movie", movie);
+        String loaderIdStr = null;
+        if(loaderId == reviewsLoaderId) loaderIdStr = MOVIE_REVIEW_LOADER_ID;
+        else if(loaderId == trailersLoaderId) loaderIdStr = MOVIE_TRAILERS_LOADER_ID;
+        bundle.putString("loaderId", loaderIdStr);
+        Loader<Movie> loader = getLoader(loaderId);
 
-        Loader<Movie> loader = getLoader();
+
         if(loader == null) {
-            loaderManager.initLoader(loaderId, bundle, this);
+            Log.v(MainActivity.TAG, "initLoader...");
+
+            if(loaderId == reviewsLoaderId) {
+                loaderReviewsManager.initLoader(loaderId, bundle, this);
+            }
+            else if(loaderId == trailersLoaderId) {
+                loaderTrailersManager.initLoader(loaderId, bundle, this);
+            }
         }
         else {
-            loaderManager.restartLoader(loaderId, bundle, this);
+            Log.v(MainActivity.TAG, "restartLoader...");
+            if(loaderId == reviewsLoaderId) {
+                loaderReviewsManager.restartLoader(loaderId, bundle, this);
+            }
+            else if(loaderId == trailersLoaderId) {
+                loaderTrailersManager.restartLoader(loaderId, bundle, this);
+            }
         }
     }
 
-    private Loader<Movie> getLoader() {
-        return loaderManager.getLoader(loaderId);
+    private Loader<Movie> getLoader(int loaderId) {
+        return loaderReviewsManager.getLoader(loaderId);
     }
 
     @Override
@@ -255,11 +316,32 @@ public class DetailsActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie movie) {
-        addReviews(movie);
+        if(loader.getId() == reviewsLoaderId) {
+            updateMovieWithReviews(movie);
+            addReviews(movie);
+        }
+        if(loader.getId() == trailersLoaderId) {
+            updateMoviewWithTrailers(movie);
+        }
+
     }
 
     @Override
     public void onLoaderReset(Loader<Movie> loader) {
+    }
+
+    private void updateMovieWithReviews(Movie newMovie) {
+        Movie.MovieBuilder movieBuilder = new Movie.MovieBuilder(this.movie);
+        movieBuilder.reviewAuthor(newMovie.getReviewAuthor());
+        movieBuilder.reviewContent(newMovie.getReviewContent());
+        movieBuilder.reviewRating(newMovie.getReviewRating());
+        this.movie = movieBuilder.build();
+    }
+
+    private void updateMoviewWithTrailers(Movie newMovie) {
+        Movie.MovieBuilder movieBuilder = new Movie.MovieBuilder(this.movie);
+        movieBuilder.trailers(newMovie.getTrailers());
+        this.movie = movieBuilder.build();
     }
 
     private void addReviews(Movie movie) {
