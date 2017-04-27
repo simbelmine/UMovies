@@ -21,6 +21,7 @@ import com.example.android.umovies.data.FavoriteMoviesContract;
 import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.ImageUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,6 +58,7 @@ public class DetailsActivity extends AppCompatActivity implements
     private int trailersLoaderId = 2;
     private int fragmentPosition;
     private boolean isFavoritesUpdated;
+    private List<String> trailerKeys;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,9 +68,6 @@ public class DetailsActivity extends AppCompatActivity implements
         isFavoritesUpdated = false;
 
         initView();
-
-
-
         initLoaders();
         getSavedInstanceStates(savedInstanceState);
         setFavoriteStar();
@@ -98,9 +97,6 @@ public class DetailsActivity extends AppCompatActivity implements
         outState.putInt(MOVIE_TRAILERS_LOADER_ID, trailersLoaderId);
         outState.putParcelable("movie", movie);
 
-        Log.e(MainActivity.TAG, "SAVED Trailers --> " + movie.getTrailers());
-        Log.e(MainActivity.TAG, "SAVED Reviews --> " + movie.getReviewAuthor());
-
         super.onSaveInstanceState(outState);
     }
 
@@ -113,13 +109,9 @@ public class DetailsActivity extends AppCompatActivity implements
 
         if(savedInstanceState != null && savedInstanceState.containsKey("movie")) {
             movie = savedInstanceState.getParcelable("movie");
-            Log.e(MainActivity.TAG, "SIS Trailers --> " + movie.getTrailers());
-            Log.e(MainActivity.TAG, "SIS Reviews --> " + movie.getReviewAuthor());
         }
         else {
             getFromExtras();
-            Log.e(MainActivity.TAG, "Bundle Trailers --> " + movie.getTrailers());
-            Log.e(MainActivity.TAG, "Bundle Reviews --> " + movie.getReviewAuthor());
         }
     }
 
@@ -285,8 +277,6 @@ public class DetailsActivity extends AppCompatActivity implements
 
 
         if(loader == null) {
-            Log.v(MainActivity.TAG, "initLoader...");
-
             if(loaderId == reviewsLoaderId) {
                 loaderReviewsManager.initLoader(loaderId, bundle, this);
             }
@@ -295,7 +285,6 @@ public class DetailsActivity extends AppCompatActivity implements
             }
         }
         else {
-            Log.v(MainActivity.TAG, "restartLoader...");
             if(loaderId == reviewsLoaderId) {
                 loaderReviewsManager.restartLoader(loaderId, bundle, this);
             }
@@ -322,6 +311,7 @@ public class DetailsActivity extends AppCompatActivity implements
         }
         if(loader.getId() == trailersLoaderId) {
             updateMoviewWithTrailers(movie);
+            trailerKeys = movie.getTrailers();
         }
 
     }
@@ -416,7 +406,9 @@ public class DetailsActivity extends AppCompatActivity implements
                     btnFavoriteOff.setVisibility(View.VISIBLE);
                     btnFavoriteOn.setVisibility(View.INVISIBLE);
                 }
-
+                break;
+            case R.id.iv_play_icon:
+                loadTrailersActivity();
                 break;
         }
     }
@@ -479,6 +471,15 @@ public class DetailsActivity extends AppCompatActivity implements
                 btnFavoriteOn.setVisibility(View.INVISIBLE);
             }
         }
+    }
+
+    private void loadTrailersActivity() {
+        Intent intent = new Intent(this, TrailersActivity.class);
+        if(trailerKeys != null) {
+            List<String> trailers = new ArrayList<>(trailerKeys);
+            intent.putStringArrayListExtra("trailerKeys", (ArrayList<String>) trailers);
+        }
+        startActivity(intent);
     }
 
     @Override

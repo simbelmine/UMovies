@@ -19,4 +19,6 @@
     <color name="transparent_item_overlay">#80212121</color>
     <color name="transparent_bg_overlay">#B3000000</color>
 
+    <color name="video_thumbnail_bg">#000000</color>
+
 </resources>

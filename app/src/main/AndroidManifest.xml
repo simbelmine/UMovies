@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailsActivity"/>
+        <activity android:name=".TrailersActivity"/>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/action_settings"
