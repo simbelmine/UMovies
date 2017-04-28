@@ -10,7 +10,7 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 
-import com.example.android.umovies.MainActivity;
+import com.example.android.umovies.activities.MainActivity;
 import com.squareup.picasso.Transformation;
 
 // ************************************************************** //

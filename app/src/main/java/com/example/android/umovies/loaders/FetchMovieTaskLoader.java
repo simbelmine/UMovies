@@ -1,4 +1,4 @@
-package com.example.android.umovies;
+package com.example.android.umovies.loaders;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.os.SystemClock;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
+import com.example.android.umovies.Movie;
+import com.example.android.umovies.MoviesFragment;
 import com.example.android.umovies.utilities.DataUtils;
 
 import java.net.URL;

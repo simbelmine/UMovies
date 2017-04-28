@@ -1,4 +1,4 @@
-package com.example.android.umovies;
+package com.example.android.umovies.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,6 +6,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.example.android.umovies.R;
 import com.example.android.umovies.utilities.WindowUtils;
 
 /**

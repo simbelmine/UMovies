@@ -1,4 +1,4 @@
-package com.example.android.umovies;
+package com.example.android.umovies.activities;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -9,6 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import com.example.android.umovies.DetailsActivity;
+import com.example.android.umovies.ItemClickListener;
+import com.example.android.umovies.R;
+import com.example.android.umovies.TrailersAdapter;
+
 import java.util.List;
 
 import butterknife.BindView;

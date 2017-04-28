@@ -1,4 +1,4 @@
-package com.example.android.umovies;
+package com.example.android.umovies.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,11 +9,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.android.umovies.DetailsActivity;
+import com.example.android.umovies.MoviesFragment;
+import com.example.android.umovies.R;
+import com.example.android.umovies.ViewPagerAdapter;
 import com.example.android.umovies.transformations.ZoomOutPageTransformer;
 import com.example.android.umovies.utilities.WindowUtils;
 

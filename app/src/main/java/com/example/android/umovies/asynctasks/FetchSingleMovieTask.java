@@ -1,8 +1,9 @@
-package com.example.android.umovies;
+package com.example.android.umovies.asynctasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.android.umovies.Movie;
 import com.example.android.umovies.utilities.DataUtils;
 
 import java.net.URL;
@@ -13,7 +14,7 @@ public class FetchSingleMovieTask extends AsyncTask<Void, Void, Movie> {
     private Movie movie;
     private FetchSingleMovieTaskCompleteListener<Movie> listener;
 
-    FetchSingleMovieTask(Context context, FetchSingleMovieTaskCompleteListener<Movie> listener,  String movieId, Movie movie) {
+    public FetchSingleMovieTask(Context context, FetchSingleMovieTaskCompleteListener<Movie> listener,  String movieId, Movie movie) {
         this.context = context;
         this.listener = listener;
         this.movieId = movieId;
