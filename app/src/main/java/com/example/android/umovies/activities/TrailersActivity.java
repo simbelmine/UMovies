@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,9 +21,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TrailersActivity extends AppCompatActivity implements ItemClickListener {
+public class TrailersActivity extends AppCompatActivity implements
+        ItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener
+    {
     private static final String YOUTUBE_APP_PATH = "vnd.youtube:";
     private static final String YOUTUBE_WEB_PATH = "http://www.youtube.com/watch?v=";
+    @BindView(R.id.srl_trailers_swipe_container) SwipeRefreshLayout trailerSwipeToRefreshLayout;
     @BindView(R.id.rv_trailers) RecyclerView recyclerViewTrailers;
     private TrailersAdapter trailersAdapter;
     private List<String> trailerKeys;
@@ -44,6 +49,7 @@ public class TrailersActivity extends AppCompatActivity implements ItemClickList
         if (Build.VERSION.SDK_INT >= 21) {
             recyclerViewTrailers.setPadding(0, (int) getResources().getDimension(R.dimen.padding_from_top_toolbar), 0, 0);
         }
+        trailerSwipeToRefreshLayout.setOnRefreshListener(this);
     }
 
     private void getFromExtras() {
@@ -78,4 +84,13 @@ public class TrailersActivity extends AppCompatActivity implements ItemClickList
             startActivity(webIntent);
         }
     }
-}
+
+        @Override
+        public void onRefresh() {
+            if(trailerKeys == null || trailerNames == null) {
+                getFromExtras();
+            }
+            setRecyclerViewAdapter();
+            trailerSwipeToRefreshLayout.setRefreshing(false);
+        }
+    }

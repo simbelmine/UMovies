@@ -12,7 +12,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import com.example.android.umovies.ItemClickListener;
 import com.example.android.umovies.Movie;
 import com.example.android.umovies.MoviesAdapter;
 import com.example.android.umovies.R;
-import com.example.android.umovies.activities.MainActivity;
 import com.example.android.umovies.loaders.FetchMovieTaskLoader;
 import com.example.android.umovies.utilities.DataUtils;
 

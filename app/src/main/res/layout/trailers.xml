@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/srl_trailers_swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_color">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_trailers"
+    android:orientation="vertical">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/padding_from_top_toolbar"/>
-</LinearLayout>
+        android:background="@color/main_color">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_trailers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/padding_from_top_toolbar"/>
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
