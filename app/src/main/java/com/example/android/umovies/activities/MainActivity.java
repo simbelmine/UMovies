@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
             }
         }
         viewPager.setAdapter(adapter);
-
     }
 
     private void updateFragmentsToShow() {
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(DetailsActivity.ADD_TO_FAVORITES_ACTION.equals(intent.getDataString())) {
-            viewPager.setAdapter(adapter);
+            setupViewPager();
             if(intent.hasExtra(MoviesFragment.FRAGMENT_POSITION)) {
                 viewPager.setCurrentItem(intent.getIntExtra(MoviesFragment.FRAGMENT_POSITION, MoviesFragment.FAVORITES_FRAGMENT_POSITION));
             }
