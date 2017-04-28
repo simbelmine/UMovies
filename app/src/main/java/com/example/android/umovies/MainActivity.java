@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         ButterKnife.bind(this);
         getMainSharedPrefs();
 
+        fragmentsToShow = new ArrayList<>(Arrays.asList(true, true, true));
+        updateFragmentsToShow();
         initViewPager();
         setupTabLayout();
         setViewPagerCachedTabs();
@@ -50,18 +53,14 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     protected void onResume() {
         super.onResume();
 
-        boolean popularMoviesVisibility = mainSharedPrefs.getBoolean(getString(R.string.popular_key), true);
-        boolean topRatedMoviesVisibility = mainSharedPrefs.getBoolean(getString(R.string.top_rated_key), true);
-        boolean favoritesMoviesVisibility = mainSharedPrefs.getBoolean(getString(R.string.favorites_key), true);
-        List<Boolean> fragmentsVisibility = new ArrayList<>();
-        fragmentsVisibility.add(popularMoviesVisibility);
-        fragmentsVisibility.add(topRatedMoviesVisibility);
-        fragmentsVisibility.add(favoritesMoviesVisibility);
-
-        if(!fragmentsVisibility.equals(fragmentsToShow)) {
-            fragmentsToShow = fragmentsVisibility;
-            setupViewPager();
+        if(!getVisibleFragmentsFromSettings().equals(fragmentsToShow)) {
+            updateFragmentsToShow();
+            initViewPager();
+            setupTabLayout();
+            setViewPagerCachedTabs();
+            setViewPagerTransformation();
         }
+
     }
 
     private void setToolbarEnhancement() {
@@ -90,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     private void initViewPager() {
-        fragmentsToShow = new ArrayList<>(Arrays.asList(true, true, true));
         setupViewPager();
     }
 
@@ -98,12 +96,33 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         String[] tabTitles = getResources().getStringArray(R.array.tab_titles);
 
-        for(int i = 0; i < fragmentsToShow.size(); i++) {
-            if(fragmentsToShow.get(i)) {
-                adapter.addFrag(MoviesFragment.newInstance(i), tabTitles[i]);
+        for (int i = 0; i < fragmentsToShow.size(); i++) {
+            if (fragmentsToShow.get(i)) {
+                MoviesFragment moviesFragment = MoviesFragment.newInstance(i);
+                adapter.addFrag(moviesFragment, tabTitles[i]);
             }
         }
         viewPager.setAdapter(adapter);
+
+    }
+
+    private void updateFragmentsToShow() {
+        List<Boolean> fragmentsVisibilityList = getVisibleFragmentsFromSettings();
+        if(!fragmentsVisibilityList.equals(fragmentsToShow)) {
+            fragmentsToShow = fragmentsVisibilityList;
+        }
+    }
+
+    private List<Boolean> getVisibleFragmentsFromSettings() {
+        boolean popularMoviesVisibility = mainSharedPrefs.getBoolean(getString(R.string.popular_key), true);
+        boolean topRatedMoviesVisibility = mainSharedPrefs.getBoolean(getString(R.string.top_rated_key), true);
+        boolean favoritesMoviesVisibility = mainSharedPrefs.getBoolean(getString(R.string.favorites_key), true);
+        List<Boolean> fragmentsVisibilityList = new ArrayList<>();
+        fragmentsVisibilityList.add(popularMoviesVisibility);
+        fragmentsVisibilityList.add(topRatedMoviesVisibility);
+        fragmentsVisibilityList.add(favoritesMoviesVisibility);
+
+        return fragmentsVisibilityList;
     }
 
     @Override
