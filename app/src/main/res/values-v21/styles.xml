@@ -15,7 +15,7 @@
         <item name="actionOverflowMenuStyle">@style/MyApp.PopupMenu</item>
         <item name="android:itemTextAppearance">@style/itemTextStyle.AppTheme</item>
 
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/settingsTheme</item>
     </style>
 
     <style name="MyApp.PopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
@@ -28,5 +28,11 @@
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">serif</item>
+    </style>
+
+    <style name="settingsTheme" parent="PreferenceThemeOverlay">
+        <item name="android:textColorPrimary">@color/main_color</item>
+        <item name="android:textColorSecondary">@color/pref_summary</item>
+        <item name="android:textSize">@dimen/txt_regular_size</item>
     </style>
 </resources>
