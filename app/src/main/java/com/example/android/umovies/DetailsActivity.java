@@ -21,6 +21,7 @@ import com.example.android.umovies.activities.TrailersActivity;
 import com.example.android.umovies.asynctasks.FetchSingleMovieTask;
 import com.example.android.umovies.asynctasks.FetchSingleMovieTaskCompleteListener;
 import com.example.android.umovies.data.FavoriteMoviesContract;
+import com.example.android.umovies.fragments.MoviesFragment;
 import com.example.android.umovies.loaders.FetchMovieExtraDataTaskLoader;
 import com.example.android.umovies.utilities.DataUtils;
 import com.example.android.umovies.utilities.ImageUtils;

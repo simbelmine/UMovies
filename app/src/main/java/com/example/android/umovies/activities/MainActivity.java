@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.android.umovies.DetailsActivity;
-import com.example.android.umovies.MoviesFragment;
+import com.example.android.umovies.fragments.MoviesFragment;
 import com.example.android.umovies.R;
 import com.example.android.umovies.ViewPagerAdapter;
 import com.example.android.umovies.transformations.ZoomOutPageTransformer;

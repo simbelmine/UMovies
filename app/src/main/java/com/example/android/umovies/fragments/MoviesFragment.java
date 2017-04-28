@@ -1,4 +1,4 @@
-package com.example.android.umovies;
+package com.example.android.umovies.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.example.android.umovies.DetailsActivity;
+import com.example.android.umovies.ItemClickListener;
+import com.example.android.umovies.Movie;
+import com.example.android.umovies.MoviesAdapter;
+import com.example.android.umovies.R;
 import com.example.android.umovies.loaders.FetchMovieTaskLoader;
 import com.example.android.umovies.utilities.DataUtils;
 

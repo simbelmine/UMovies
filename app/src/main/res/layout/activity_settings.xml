@@ -8,7 +8,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.android.umovies.SettingsFragment"
+        android:name="com.example.android.umovies.fragments.SettingsFragment"
         android:id="@+id/settings_fragment">
     </fragment>
 </LinearLayout>
