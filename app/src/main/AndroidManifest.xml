@@ -30,6 +30,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity"/>
         </activity>
+        
+        <provider
+            android:authorities="com.example.android.umovies"
+            android:name="com.example.android.umovies.data.FavoritesContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

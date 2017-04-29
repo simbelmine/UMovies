@@ -32,6 +32,25 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_GENRES;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_IMG_URL;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_NAME;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVENUE;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RUNTIME;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_SYNOPSIS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TAGLINE;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TIMESTAMP;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_KEYS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_NAMES;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_VOTES;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI;
+
 public final class DataUtils {
     private static final int  RESPONSE_LOWER_LIMIT = 200;
     private static final int  RESPONSE_UPPER_LIMIT = 300;
@@ -317,30 +336,22 @@ public final class DataUtils {
         favoriteMoviesDB = dbHelper.getReadableDatabase();
     }
 
-    public static long insertToDb(Context context, ContentValues cv) {
-        FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(context);
-        favoriteMoviesDB = dbHelper.getWritableDatabase();
-        long res = favoriteMoviesDB.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
-        favoriteMoviesDB.close();
-
-        return res;
+    public static boolean insert(Context context, ContentValues cv) {
+        return context.getContentResolver().insert(CONTENT_URI, cv) != null;
     }
 
-    public static int deleteFromDb(Context context, String id) {
-        FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(context);
-        favoriteMoviesDB = dbHelper.getWritableDatabase();
-        int res = favoriteMoviesDB.delete(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID + " = " + id, null);
-        favoriteMoviesDB.close();
+    public static boolean delete(Context context, String id) {
+        Uri uri = CONTENT_URI;
+        uri = uri.buildUpon().appendPath(id).build();
 
-        return res;
+        return context.getContentResolver().delete(uri, null, null) > 0;
     }
 
     public static List<Movie> getFavoriteMoviesListFromSQLite(Context context) {
         DataUtils.initFavoriteMoviesReadableDB(context);
 
         List<Movie> movieList = new ArrayList<>();
-        Cursor cursor = getFavoriteMovies();
+        Cursor cursor = getFavoriteMovies(context);
 
         if(cursor != null) {
             cursor.moveToFirst();
@@ -357,22 +368,22 @@ public final class DataUtils {
     }
 
     private static Movie getMovieFromCursor(Cursor cursor) {
-        String movieId = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID));
-        String movieName = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_NAME));
-        String movieImgUrl = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_IMG_URL));
-        String movieSynopsis = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_SYNOPSIS));
-        String movieReleaseDate = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE));
-        String movieRating = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING));
-        String movieVotes = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_VOTES));
-        String movieTagline = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TAGLINE));
-        String movieRuntime = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RUNTIME));
-        String movieRevenue = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVENUE));
-        String movieGenres = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_GENRES));
-        String movieReviewAuthors = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS));
-        String movieReviewContents = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS));
-        String movieReviewRatings = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS));
-        String movieTrailerKeys = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_KEYS));
-        String movieTrailerNames = cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_NAMES));
+        String movieId = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_ID));
+        String movieName = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_NAME));
+        String movieImgUrl = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_IMG_URL));
+        String movieSynopsis = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_SYNOPSIS));
+        String movieReleaseDate = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_RELEASE_DATE));
+        String movieRating = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_RATING));
+        String movieVotes = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_VOTES));
+        String movieTagline = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_TAGLINE));
+        String movieRuntime = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_RUNTIME));
+        String movieRevenue = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_REVENUE));
+        String movieGenres = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_GENRES));
+        String movieReviewAuthors = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_REVIEW_AUTHORS));
+        String movieReviewContents = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_REVIEW_CONTENTS));
+        String movieReviewRatings = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_REVIEW_RATINGS));
+        String movieTrailerKeys = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_TRAILER_KEYS));
+        String movieTrailerNames = cursor.getString(cursor.getColumnIndex(COLUMN_MOVIE_TRAILER_NAMES));
 
         List<String> listGenres = getListFromString(movieGenres);
         List<String> listReviewAuthors = getListFromString(movieReviewAuthors);
@@ -400,22 +411,7 @@ public final class DataUtils {
     }
 
     public static boolean isMovieInDB(Context context, String movieID) {
-        initFavoriteMoviesReadableDB(context);
-        String queryStr = "SELECT * FROM " +
-                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME +
-                " WHERE " + FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID +
-                " = " + movieID;
-
-        Cursor cursor = favoriteMoviesDB.rawQuery(queryStr, null);
-        if(cursor.getCount() <= 0) {
-            cursor.close();
-            favoriteMoviesDB.close();
-            return false;
-        }
-
-        cursor.close();
-        favoriteMoviesDB.close();
-        return true;
+        return getFavoriteSingleMovie(context, movieID).getCount() > 0;
     }
 
     private static List<String> getListFromString(String str) {
@@ -439,16 +435,23 @@ public final class DataUtils {
         return stringBuilder.toString();
     }
 
-    private static Cursor getFavoriteMovies() {
-        return favoriteMoviesDB.query(
-                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
+    private static Cursor getFavoriteMovies(Context context) {
+        return context.getContentResolver().query(CONTENT_URI,
                 null,
                 null,
                 null,
+                COLUMN_MOVIE_TIMESTAMP);
+    }
+
+    private static Cursor getFavoriteSingleMovie(Context context, String id) {
+        Uri uri = CONTENT_URI;
+        uri = uri.buildUpon().appendPath(id).build();
+
+        return context.getContentResolver().query(uri,
                 null,
                 null,
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TIMESTAMP
-        );
+                null,
+                COLUMN_MOVIE_TIMESTAMP);
     }
 
     public static String getRuntime(String originalStr) {

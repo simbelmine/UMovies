@@ -32,6 +32,23 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_GENRES;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_IMG_URL;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_NAME;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVENUE;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RUNTIME;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_SYNOPSIS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TAGLINE;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_KEYS;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_NAMES;
+import static com.example.android.umovies.data.FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_VOTES;
+
 public class DetailsActivity extends AppCompatActivity implements
         FetchSingleMovieTaskCompleteListener<Movie>,
         LoaderManager.LoaderCallbacks<Movie>,
@@ -420,37 +437,31 @@ public class DetailsActivity extends AppCompatActivity implements
 
     private boolean addToFavorites() {
         ContentValues cv = new ContentValues();
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_NAME, movie.getTitle());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_IMG_URL, movie.getImageURL());
+        cv.put(COLUMN_MOVIE_ID, movie.getId());
+        cv.put(COLUMN_MOVIE_NAME, movie.getTitle());
+        cv.put(COLUMN_MOVIE_IMG_URL, movie.getImageURL());
 
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_SYNOPSIS, synopsisView.getText().toString());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, releaseDateView.getText().toString());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RATING, DataUtils.getRatingForDB(ratingView.getText().toString()));
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_VOTES, votesView.getText().toString());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TAGLINE, taglineView.getText().toString());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_RUNTIME, runtimeView.getText().toString());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVENUE, revenueView.getText().toString());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_GENRES, DataUtils.getGenresForDB(genresView.getText().toString()));
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_AUTHORS, getReviewDetails(1));
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_CONTENTS, getReviewDetails(2));
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_REVIEW_RATINGS, getReviewDetails(3));
+        cv.put(COLUMN_MOVIE_SYNOPSIS, synopsisView.getText().toString());
+        cv.put(COLUMN_MOVIE_RELEASE_DATE, releaseDateView.getText().toString());
+        cv.put(COLUMN_MOVIE_RATING, DataUtils.getRatingForDB(ratingView.getText().toString()));
+        cv.put(COLUMN_MOVIE_VOTES, votesView.getText().toString());
+        cv.put(COLUMN_MOVIE_TAGLINE, taglineView.getText().toString());
+        cv.put(COLUMN_MOVIE_RUNTIME, runtimeView.getText().toString());
+        cv.put(COLUMN_MOVIE_REVENUE, revenueView.getText().toString());
+        cv.put(COLUMN_MOVIE_GENRES, DataUtils.getGenresForDB(genresView.getText().toString()));
+        cv.put(COLUMN_MOVIE_REVIEW_AUTHORS, getReviewDetails(1));
+        cv.put(COLUMN_MOVIE_REVIEW_CONTENTS, getReviewDetails(2));
+        cv.put(COLUMN_MOVIE_REVIEW_RATINGS, getReviewDetails(3));
         String trailerKeysStr = DataUtils.getSeparatedStringFromList(trailerKeys);
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_KEYS, trailerKeysStr);
+        cv.put(COLUMN_MOVIE_TRAILER_KEYS, trailerKeysStr);
         String trailerNamesStr =  DataUtils.getSeparatedStringFromList(trailerNames);
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TRAILER_NAMES, trailerNamesStr);
+        cv.put(COLUMN_MOVIE_TRAILER_NAMES, trailerNamesStr);
 
-        if(DataUtils.insertToDb(this, cv) != -1) {
-            return true;
-        }
-        return false;
+        return DataUtils.insert(this, cv);
     }
 
     private boolean deleteFromFavorites() {
-        if(DataUtils.deleteFromDb(this, movie.getId()) > 0) {
-            return true;
-        }
-        return false;
+        return DataUtils.delete(this, movie.getId());
     }
 
     private String getReviewDetails(int position) {
