@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.example.android.umovies.DetailsActivity;
 import com.example.android.umovies.ItemClickListener;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
 public class TrailersActivity extends AppCompatActivity implements
         ItemClickListener,
         SwipeRefreshLayout.OnRefreshListener
-    {
+{
     private static final String YOUTUBE_APP_PATH = "vnd.youtube:";
     private static final String YOUTUBE_WEB_PATH = "http://www.youtube.com/watch?v=";
     @BindView(R.id.srl_trailers_swipe_container) SwipeRefreshLayout trailerSwipeToRefreshLayout;
@@ -73,24 +74,40 @@ public class TrailersActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(View view, int position) {
         String id = trailerKeys.get(position);
         Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_APP_PATH + id));
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
                 Uri.parse(YOUTUBE_WEB_PATH + id));
-        try {
-            startActivity(appIntent);
-        } catch (ActivityNotFoundException ex) {
-            startActivity(webIntent);
+        switch (view.getId()) {
+            case R.id.iv_play_icon:
+                try {
+                    startActivity(appIntent);
+                } catch (ActivityNotFoundException ex) {
+                    startActivity(webIntent);
+                }
+                break;
+            case R.id.iv_share:
+                shareVideo(id);
+                break;
         }
     }
 
-        @Override
-        public void onRefresh() {
-            if(trailerKeys == null || trailerNames == null) {
-                getFromExtras();
-            }
-            setRecyclerViewAdapter();
-            trailerSwipeToRefreshLayout.setRefreshing(false);
+    @Override
+    public void onRefresh() {
+        if(trailerKeys == null || trailerNames == null) {
+            getFromExtras();
         }
+        setRecyclerViewAdapter();
+        trailerSwipeToRefreshLayout.setRefreshing(false);
     }
+
+    private void shareVideo(String id) {
+        String webPath = YOUTUBE_WEB_PATH + id;
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, webPath);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_lbl)));
+    }
+}

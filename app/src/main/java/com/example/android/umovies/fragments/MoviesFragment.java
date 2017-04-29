@@ -219,7 +219,7 @@ public class MoviesFragment extends Fragment  implements
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(View view, int position) {
         Movie currMovie;
         Intent intent = new Intent(context, DetailsActivity.class);
 

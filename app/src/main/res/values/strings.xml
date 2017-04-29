@@ -22,6 +22,7 @@
     <string name="synopsis_lbl">Synopsis</string>
     <string name="reviews_lbl">Reviews</string>
     <string name="details_lbl">Details</string>
+    <string name="share_lbl">Share</string>
 
     <!-- Details Dummy Text -->
     <string name="dummy_movie_name">The Awesome Movie Name</string>

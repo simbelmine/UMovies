@@ -41,6 +41,6 @@
     <dimen name="star_padding">5dp</dimen>
 
     <dimen name="play_outline_size">45dp</dimen>
-    <dimen name="play_size">50dp</dimen>
+    <dimen name="play_size">80dp</dimen>
     <dimen name="scroll_view_margin_lr">12dp</dimen>
 </resources>

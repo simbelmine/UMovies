@@ -11,10 +11,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Sve on 3/10/17.
- */
-
 public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @BindView(R.id.fl_item_movie_container) LinearLayout movieContainer;
     @BindView(R.id.iv_item_img) ImageView movieImg;
@@ -34,6 +30,6 @@ public class MoviesRVHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        itemClickListener.onItemClick(getAdapterPosition());
+        itemClickListener.onItemClick(v, getAdapterPosition());
     }
 }
