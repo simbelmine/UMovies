@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -334,7 +335,6 @@ public class DetailsActivity extends AppCompatActivity implements
             trailerKeys = movie.getTrailerKeys();
             trailerNames = movie.getTrailerNames();
         }
-
     }
 
     @Override
@@ -368,8 +368,8 @@ public class DetailsActivity extends AppCompatActivity implements
 
         while (i < size) {
             String author = movie.getReviewAuthor().get(i);
-            String content = movie.getReviewContent().get(i);
-            String rating = movie.getReviewRating().get(i);
+            String content = i < movie.getReviewContent().size() ? movie.getReviewContent().get(i) : "";
+            String rating = i < movie.getReviewRating().size() ? movie.getReviewRating().get(i) : "";
 
             createReview(author, content, rating);
 
@@ -449,9 +449,11 @@ public class DetailsActivity extends AppCompatActivity implements
         cv.put(COLUMN_MOVIE_RUNTIME, runtimeView.getText().toString());
         cv.put(COLUMN_MOVIE_REVENUE, revenueView.getText().toString());
         cv.put(COLUMN_MOVIE_GENRES, DataUtils.getGenresForDB(genresView.getText().toString()));
-        cv.put(COLUMN_MOVIE_REVIEW_AUTHORS, getReviewDetails(1));
-        cv.put(COLUMN_MOVIE_REVIEW_CONTENTS, getReviewDetails(2));
-        cv.put(COLUMN_MOVIE_REVIEW_RATINGS, getReviewDetails(3));
+        cv.put(COLUMN_MOVIE_REVIEW_AUTHORS, DataUtils.getSeparatedStringFromList(movie.getReviewAuthor()));
+        cv.put(COLUMN_MOVIE_REVIEW_CONTENTS, DataUtils.getSeparatedStringFromList(movie.getReviewContent()));
+        cv.put(COLUMN_MOVIE_REVIEW_RATINGS, DataUtils.getSeparatedStringFromList(movie.getReviewRating()));
+
+
         String trailerKeysStr = DataUtils.getSeparatedStringFromList(trailerKeys);
         cv.put(COLUMN_MOVIE_TRAILER_KEYS, trailerKeysStr);
         String trailerNamesStr =  DataUtils.getSeparatedStringFromList(trailerNames);
@@ -462,13 +464,6 @@ public class DetailsActivity extends AppCompatActivity implements
 
     private boolean deleteFromFavorites() {
         return DataUtils.delete(this, movie.getId());
-    }
-
-    private String getReviewDetails(int position) {
-        if(reviewsView.getChildAt(position) instanceof TextView) {
-            return ((TextView) reviewsView.getChildAt(position)).getText().toString();
-        }
-        return "";
     }
 
     private void populateDataOffline(Movie movie) {
