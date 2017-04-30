@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.example.android.umovies.DetailsActivity;
 import com.example.android.umovies.ItemClickListener;
 import com.example.android.umovies.R;
 import com.example.android.umovies.TrailersAdapter;

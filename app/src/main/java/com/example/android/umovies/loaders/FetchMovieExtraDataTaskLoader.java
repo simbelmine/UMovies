@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.example.android.umovies.DetailsActivity;
+import com.example.android.umovies.activities.DetailsActivity;
 import com.example.android.umovies.Movie;
 import com.example.android.umovies.utilities.DataUtils;
 

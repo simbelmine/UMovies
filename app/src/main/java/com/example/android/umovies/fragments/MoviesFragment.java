@@ -18,11 +18,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import com.example.android.umovies.DetailsActivity;
 import com.example.android.umovies.ItemClickListener;
 import com.example.android.umovies.Movie;
 import com.example.android.umovies.MoviesAdapter;
 import com.example.android.umovies.R;
+import com.example.android.umovies.activities.DetailsActivity;
 import com.example.android.umovies.loaders.FetchMovieTaskLoader;
 import com.example.android.umovies.utilities.DataUtils;
 
@@ -41,6 +41,7 @@ public class MoviesFragment extends Fragment  implements
     private static final int GRID_COLUMNS_LANDSCAPE = 3;
     public static final String MOVIE_OBJ = "MovieObj";
     public static final String MOVIE_POS = "MoviePosition";
+    public static final String MOVIE_ITEM_POS = "MovieItemPosition";
     private static final String MOVIES_LIST_OBJ = "MoviesListObj";
     public static String FRAGMENT_POSITION = "fragmentPosition";
     public static int FAVORITES_FRAGMENT_POSITION = 2;
@@ -54,6 +55,7 @@ public class MoviesFragment extends Fragment  implements
     private int fragmentPosition;
     private Context context;
     private int loaderId;
+    private GridLayoutManager layoutManager;
     private LoaderManager loaderManager;
 
     public MoviesFragment(){}
@@ -78,7 +80,9 @@ public class MoviesFragment extends Fragment  implements
         setupRecyclerView();
         getSavedInstanceStates(savedInstanceState);
         initLoader();
-        fetchData(fragmentPosition);
+        if(moviesList == null || moviesList.size() == 0) {
+            fetchData(fragmentPosition);
+        }
 
         return view;
     }
@@ -134,17 +138,15 @@ public class MoviesFragment extends Fragment  implements
 
 
     private void fetchData(int fragmentPosition) {
-        if(moviesList == null || moviesList.size() == 0) {
-            if (DataUtils.isOnline(context) || fragmentPosition == FAVORITES_FRAGMENT_POSITION) {
-                loadFetchedMovies(fragmentPosition);
-                moviesRView.setVisibility(View.VISIBLE);
-                noMoviesMessage.setVisibility(View.INVISIBLE);
-            } else {
-                moviesRView.setVisibility(View.INVISIBLE);
-                noMoviesMessage.setVisibility(View.VISIBLE);
-                swipeRefreshLayout.setRefreshing(false);
-                DataUtils.showSnackbarMessage(context, mainContainer, getResources().getString(R.string.no_network));
-            }
+        if (DataUtils.isOnline(context) || fragmentPosition == FAVORITES_FRAGMENT_POSITION) {
+            loadFetchedMovies(fragmentPosition);
+            moviesRView.setVisibility(View.VISIBLE);
+            noMoviesMessage.setVisibility(View.INVISIBLE);
+        } else {
+            moviesRView.setVisibility(View.INVISIBLE);
+            noMoviesMessage.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(false);
+            DataUtils.showSnackbarMessage(context, mainContainer, getResources().getString(R.string.no_network));
         }
     }
 
@@ -178,6 +180,7 @@ public class MoviesFragment extends Fragment  implements
         if(movies != null && movies.size() > 0) {
             populateMovieList();
             DataUtils.setMovieList(movies);
+            moviesAdapter.notifyDataSetChanged();
         }
     }
 
@@ -196,7 +199,6 @@ public class MoviesFragment extends Fragment  implements
     }
 
     private void setupRecyclerView() {
-        final GridLayoutManager layoutManager;
         if(getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE)
             layoutManager = new GridLayoutManager(context, GRID_COLUMNS_LANDSCAPE);
         else
@@ -207,6 +209,10 @@ public class MoviesFragment extends Fragment  implements
     private void initLoader() {
         loaderManager = getActivity().getSupportLoaderManager();
         loaderManager.initLoader(loaderId, null, this);
+    }
+
+    public void updateFavoritesList() {
+        fetchData(FAVORITES_FRAGMENT_POSITION);
     }
 
     private void initView() {
@@ -228,6 +234,11 @@ public class MoviesFragment extends Fragment  implements
             intent.putExtra(MOVIE_OBJ, currMovie);
             intent.putExtra(MOVIE_POS, position);
             intent.putExtra(FRAGMENT_POSITION, fragmentPosition);
+            intent.putExtra(MOVIE_ITEM_POS, position);
+
+
+            Fragment.SavedState myFragmentState = getActivity().getSupportFragmentManager().saveFragmentInstanceState(this);
+            intent.putExtra("state", myFragmentState);
         }
 
         startActivity(intent);

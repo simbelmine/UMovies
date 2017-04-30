@@ -20,7 +20,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailsActivity"/>
+        <activity
+            android:name=".activities.DetailsActivity"
+            android:label="Details"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity"/>
+        </activity>
         <activity android:name=".activities.TrailersActivity"/>
         <activity
             android:name=".activities.SettingsActivity"
@@ -30,7 +37,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity"/>
         </activity>
-        
+
         <provider
             android:authorities="com.example.android.umovies"
             android:name="com.example.android.umovies.data.FavoritesContentProvider"

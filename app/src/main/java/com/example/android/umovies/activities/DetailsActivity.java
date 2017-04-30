@@ -1,4 +1,4 @@
-package com.example.android.umovies;
+package com.example.android.umovies.activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -17,11 +16,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.android.umovies.activities.MainActivity;
-import com.example.android.umovies.activities.TrailersActivity;
+import com.example.android.umovies.Movie;
+import com.example.android.umovies.R;
 import com.example.android.umovies.asynctasks.FetchSingleMovieTask;
 import com.example.android.umovies.asynctasks.FetchSingleMovieTaskCompleteListener;
-import com.example.android.umovies.data.FavoriteMoviesContract;
 import com.example.android.umovies.fragments.MoviesFragment;
 import com.example.android.umovies.loaders.FetchMovieExtraDataTaskLoader;
 import com.example.android.umovies.utilities.DataUtils;
@@ -511,6 +509,9 @@ public class DetailsActivity extends AppCompatActivity implements
             Intent intentToReturn = new Intent(this, MainActivity.class);
             intentToReturn.setData(Uri.parse(ADD_TO_FAVORITES_ACTION));
             intentToReturn.putExtra(MoviesFragment.FRAGMENT_POSITION, fragmentPosition);
+            intentToReturn.putExtra(MoviesFragment.MOVIE_ITEM_POS,
+                    getIntent().getIntExtra(MoviesFragment.MOVIE_ITEM_POS, 0));
+            intentToReturn.putExtra("state", getIntent().getParcelableExtra("state"));
             startActivity(intentToReturn);
         }
     }

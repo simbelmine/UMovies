@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.android.umovies.DetailsActivity;
 import com.example.android.umovies.fragments.MoviesFragment;
 import com.example.android.umovies.R;
 import com.example.android.umovies.ViewPagerAdapter;
@@ -65,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         }
 
     }
+
 
     private void setToolbarEnhancement() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -169,11 +169,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
         if(DetailsActivity.ADD_TO_FAVORITES_ACTION.equals(intent.getDataString())) {
-            setupViewPager();
-            if(intent.hasExtra(MoviesFragment.FRAGMENT_POSITION)) {
-                viewPager.setCurrentItem(intent.getIntExtra(MoviesFragment.FRAGMENT_POSITION, MoviesFragment.FAVORITES_FRAGMENT_POSITION));
-            }
+            ((MoviesFragment)adapter.getFragment(MoviesFragment.FAVORITES_FRAGMENT_POSITION)).updateFavoritesList();
         }
     }
 }

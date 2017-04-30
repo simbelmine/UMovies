@@ -42,4 +42,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
+
+    public Fragment getFragment(int position) {
+        return mFragmentList.get(position);
+    }
 }
