@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
@@ -171,7 +172,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         super.onNewIntent(intent);
 
         if(DetailsActivity.ADD_TO_FAVORITES_ACTION.equals(intent.getDataString())) {
-            ((MoviesFragment)adapter.getFragment(MoviesFragment.FAVORITES_FRAGMENT_POSITION)).updateFavoritesList();
+            String[] title = getResources().getStringArray(R.array.tab_titles);
+            String favoriteTitle = title[MoviesFragment.FAVORITES_FRAGMENT_POSITION];
+            Fragment fragment = adapter.getFragmentByName(favoriteTitle);
+            if(fragment != null) {
+                    ((MoviesFragment) fragment).updateFavoritesList();
+            }
         }
     }
 }

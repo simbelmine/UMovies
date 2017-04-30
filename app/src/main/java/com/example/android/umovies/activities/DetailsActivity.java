@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -188,6 +189,8 @@ public class DetailsActivity extends AppCompatActivity implements
             }
 
             moviePos = bundle.getInt(MoviesFragment.MOVIE_POS, -1);
+            Log.v(MainActivity.TAG, "Bundle: moviePos = " + moviePos);
+
             fragmentPosition = bundle.getInt(MoviesFragment.FRAGMENT_POSITION, -1);
         }
     }
@@ -209,7 +212,6 @@ public class DetailsActivity extends AppCompatActivity implements
             revenueView.setText(DataUtils.getRevenue(movie.getRevenue()));
             taglineView.setText(movie.getTagline());
             genresView.setText(DataUtils.getGenres(movie.getGenres()));
-            DataUtils.updateMovie(movie, moviePos);
         }
     }
 

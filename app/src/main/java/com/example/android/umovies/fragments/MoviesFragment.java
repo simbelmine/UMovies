@@ -179,7 +179,6 @@ public class MoviesFragment extends Fragment  implements
         swipeRefreshLayout.setRefreshing(false);
         if(movies != null && movies.size() > 0) {
             populateMovieList();
-            DataUtils.setMovieList(movies);
             moviesAdapter.notifyDataSetChanged();
         }
     }
@@ -235,10 +234,6 @@ public class MoviesFragment extends Fragment  implements
             intent.putExtra(MOVIE_POS, position);
             intent.putExtra(FRAGMENT_POSITION, fragmentPosition);
             intent.putExtra(MOVIE_ITEM_POS, position);
-
-
-            Fragment.SavedState myFragmentState = getActivity().getSupportFragmentManager().saveFragmentInstanceState(this);
-            intent.putExtra("state", myFragmentState);
         }
 
         startActivity(intent);

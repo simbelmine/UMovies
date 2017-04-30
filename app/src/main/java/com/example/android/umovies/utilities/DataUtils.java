@@ -9,11 +9,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.android.umovies.Movie;
 import com.example.android.umovies.R;
+import com.example.android.umovies.activities.MainActivity;
 import com.example.android.umovies.data.FavoriteMoviesContract;
 import com.example.android.umovies.data.FavoriteMoviesDbHelper;
 
@@ -313,23 +315,7 @@ public final class DataUtils {
         TextView textView = (TextView) snackbarView.findViewById(snackbarTextId);
         textView.setTextColor(context.getResources().getColor(R.color.colorAccent));
     }
-
-    private static  List<Movie> movieListGlobal;
-
-    public static  List<Movie> getMovieList() {
-        return movieListGlobal;
-    }
-
-    public static  void setMovieList(List<Movie> movieList) {
-        movieListGlobal = movieList;
-    }
-
-    public static void updateMovie(Movie newMovie, int pos) {
-        newMovie.setIsFullyUpdated(true);
-        movieListGlobal.set(pos, newMovie);
-    }
-
-
+    
     private static SQLiteDatabase favoriteMoviesDB;
     public static void initFavoriteMoviesReadableDB(Context context) {
         FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(context);
